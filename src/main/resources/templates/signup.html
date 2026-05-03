@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="login-page signup-page">
+    <div class="login-grid-bg" aria-hidden="true"></div>
+    <div class="login-glow signup-glow-top" aria-hidden="true"></div>
+    <div class="login-glow signup-glow-bottom" aria-hidden="true"></div>
+
+    <section class="login-card signup-card" aria-labelledby="signupTitle">
+        <div class="login-heading">
+            <p>Yangi foydalanuvchi</p>
+            <h1 id="signupTitle">Sign Up</h1>
+        </div>
+
+        <form th:action="@{/signup}" th:object="${registrationForm}" method="post" class="login-form signup-form">
+            <div class="login-field">
+                <label for="username">Login</label>
+                <div class="login-input-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/>
+                    </svg>
+                    <input id="username" type="text" th:field="*{username}" placeholder="Login tanlang" autocomplete="username" required>
+                </div>
+                <p class="signup-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+            </div>
+
+            <div class="login-field">
+                <label for="password">Parol</label>
+                <div class="login-input-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M17 9h-1V7A4 4 0 0 0 8 7v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zM10 7a2 2 0 0 1 4 0v2h-4V7z"/>
+                    </svg>
+                    <input id="password" type="password" th:field="*{password}" placeholder="Kamida 10 ta belgi" autocomplete="new-password" required minlength="10">
+                    <button type="button" class="login-password-toggle" data-toggle-password="password" aria-label="Parolni ko'rsatish" title="Parolni ko'rsatish">
+                        <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 5c5 0 9 4.5 10 7-1 2.5-5 7-10 7S3 14.5 2 12c1-2.5 5-7 10-7zm0 2c-3.4 0-6.3 2.7-7.7 5 1.4 2.3 4.3 5 7.7 5s6.3-2.7 7.7-5C18.3 9.7 15.4 7 12 7zm0 2.5A2.5 2.5 0 1 1 9.5 12 2.5 2.5 0 0 1 12 9.5z"/>
+                        </svg>
+                        <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m3.3 2 18.7 18.7-1.3 1.3-3.1-3.1A10.5 10.5 0 0 1 12 21C7 21 3 16.5 2 14c.5-1.3 1.9-3.1 3.8-4.5L2 5.3 3.3 2zm7 7 1.5 1.5A2.5 2.5 0 0 1 15.5 14l1 1A4.5 4.5 0 0 0 10.3 9zM12 7c5 0 9 4.5 10 7-.3.8-1.1 1.9-2.2 3L17 14.2V14a5 5 0 0 0-5-5h-.2L9.7 6.9A10.7 10.7 0 0 1 12 7z"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="signup-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+            </div>
+
+            <div class="login-field">
+                <label for="confirmPassword">Parolni tasdiqlang</label>
+                <div class="login-input-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M17 9h-1V7A4 4 0 0 0 8 7v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zM10 7a2 2 0 0 1 4 0v2h-4V7z"/>
+                    </svg>
+                    <input id="confirmPassword" type="password" th:field="*{confirmPassword}" placeholder="Parolni qayta kiriting" autocomplete="new-password" required minlength="10">
+                    <button type="button" class="login-password-toggle" data-toggle-password="confirmPassword" aria-label="Parolni ko'rsatish" title="Parolni ko'rsatish">
+                        <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 5c5 0 9 4.5 10 7-1 2.5-5 7-10 7S3 14.5 2 12c1-2.5 5-7 10-7zm0 2c-3.4 0-6.3 2.7-7.7 5 1.4 2.3 4.3 5 7.7 5s6.3-2.7 7.7-5C18.3 9.7 15.4 7 12 7zm0 2.5A2.5 2.5 0 1 1 9.5 12 2.5 2.5 0 0 1 12 9.5z"/>
+                        </svg>
+                        <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m3.3 2 18.7 18.7-1.3 1.3-3.1-3.1A10.5 10.5 0 0 1 12 21C7 21 3 16.5 2 14c.5-1.3 1.9-3.1 3.8-4.5L2 5.3 3.3 2zm7 7 1.5 1.5A2.5 2.5 0 0 1 15.5 14l1 1A4.5 4.5 0 0 0 10.3 9zM12 7c5 0 9 4.5 10 7-.3.8-1.1 1.9-2.2 3L17 14.2V14a5 5 0 0 0-5-5h-.2L9.7 6.9A10.7 10.7 0 0 1 12 7z"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="signup-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
+            </div>
+
+            <p class="security-hidden-note signup-security-note">Parol kamida 10 ta belgidan iborat bo'lsin. Katta harf, kichik harf, raqam va maxsus belgi ishlating.</p>
+
+            <button type="submit" class="login-submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm-8 9v-1c0-2.8 3.6-5 8-5a12 12 0 0 1 2.8.3A6.5 6.5 0 0 0 17 18.5V21H7zm13-5v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"/>
+                </svg>
+                Ro'yxatdan o'tish
+            </button>
+        </form>
+
+        <p class="login-switch signup-switch">
+            Akkauntingiz bormi?
+            <a th:href="@{/login}">
+                Sign In
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m13 5 7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6L13 5z"/>
+                </svg>
+            </a>
+        </p>
+    </section>
+</main>
+<script>
+    document.querySelectorAll('[data-toggle-password]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const input = document.getElementById(button.dataset.togglePassword);
+            if (!input) {
+                return;
+            }
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            button.classList.toggle('is-visible', isPassword);
+            button.setAttribute('aria-label', isPassword ? 'Parolni yashirish' : 'Parolni ko\'rsatish');
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hisobotlarim</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/teacher-panel'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow">O'qituvchi oynasi</p>
+                <h1>Hisobotlarim</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/teacher-panel}">Orqaga</a>
+        </div>
+
+        <section class="feature-grid">
+            <a class="feature-card" th:href="@{/teacher/my-reports/teaching}">
+                <span class="feature-index">01</span>
+                <h2>O'quv ishlari</h2>
+            </a>
+
+            <a class="feature-card" th:href="@{/teacher/my-reports/methodical}">
+                <span class="feature-index">02</span>
+                <h2>Ilmiy-uslubiy ishlar</h2>
+            </a>
+
+            <a class="feature-card" th:href="@{/teacher/my-reports/research}">
+                <span class="feature-index">03</span>
+                <h2>Ilmiy-tadqiqot ishlari</h2>
+            </a>
+
+            <a class="feature-card" th:href="@{/teacher/my-reports/mentorship}">
+                <span class="feature-index">04</span>
+                <h2>Ustoz-shogird ishlari</h2>
+            </a>
+        </section>
+    </section>
+</main>
+</body>
+</html>

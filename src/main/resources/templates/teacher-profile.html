@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaxsiy Kabinet</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="teacher-flow-shell">
+    <section class="teacher-flow-page teacher-flow-profile-page">
+        <div class="teacher-flow-topbar">
+            <div>
+                <p class="teacher-flow-eyebrow">O'qituvchi oynasi</p>
+                <h1>Shaxsiy kabinet</h1>
+            </div>
+            <a class="teacher-flow-back-link" th:href="@{/teacher-panel}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/></svg>
+                Orqaga
+            </a>
+        </div>
+
+        <section class="teacher-flow-profile-card">
+            <div class="teacher-flow-profile-cover">
+                <div class="teacher-flow-avatar-wrap">
+                    <div class="teacher-flow-avatar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/>
+                        </svg>
+                    </div>
+                    <button type="button" aria-label="Rasm tanlash">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l1.2 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.8L9 4zm3 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0-2a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </button>
+                </div>
+                <div class="teacher-flow-profile-meta">
+                    <h2 th:text="${fullName}">o'qituvchi</h2>
+                    <p th:text="'ID: ' + ${username}">ID: oqituvchi</p>
+                </div>
+            </div>
+
+            <div class="teacher-flow-profile-body">
+                <div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
+                <div th:if="${passwordSuccess}" class="message success" th:text="${passwordSuccess}"></div>
+
+                <form class="teacher-flow-profile-form" th:action="@{/teacher/profile}" th:object="${profileForm}" method="post">
+                    <div class="teacher-flow-input wide">
+                        <label for="fullName">To'liq ism-sharifi</label>
+                        <div class="teacher-flow-input-box">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/></svg>
+                            <input id="fullName" type="text" th:field="*{fullName}">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></p>
+                    </div>
+
+                    <div class="teacher-flow-input">
+                        <label for="department">Kafedra</label>
+                        <div class="teacher-flow-input-box">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V7l8-4 8 4v14h-6v-6h-4v6H4zm4-10h2V9H8v2zm6 0h2V9h-2v2z"/></svg>
+                            <input id="department" type="text" th:field="*{department}">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+                    </div>
+
+                    <div class="teacher-flow-input">
+                        <label for="position">Lavozim</label>
+                        <div class="teacher-flow-input-box">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3h5v13H4V7h5V4zm2 3h2V6h-2v1z"/></svg>
+                            <input id="position" type="text" th:field="*{position}">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></p>
+                    </div>
+
+                    <div class="teacher-flow-input">
+                        <label for="phoneNumber">Telefon raqami</label>
+                        <div class="teacher-flow-input-box">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.4 15.4 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.3.4 2.6.6 4 .6.7 0 1.2.5 1.2 1.2v3.5c0 .7-.5 1.2-1.2 1.2A18.6 18.6 0 0 1 2 3.2C2 2.5 2.5 2 3.2 2h3.5C7.4 2 8 2.5 8 3.2c0 1.4.2 2.7.6 4 .1.4 0 .9-.3 1.2l-1.7 2.4z"/></svg>
+                            <input id="phoneNumber" type="text" th:field="*{phoneNumber}">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></p>
+                    </div>
+
+                    <div class="teacher-flow-input">
+                        <label for="username">Login</label>
+                        <div class="teacher-flow-input-box">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4V4zm2 4 6 4 6-4V6l-6 4-6-4v2z"/></svg>
+                            <input id="username" type="text" th:field="*{username}">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                    </div>
+
+                    <div class="teacher-flow-input">
+                        <label for="currentPassword">Parol</label>
+                        <div class="teacher-flow-input-box">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9h-1V7A4 4 0 0 0 8 7v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zM10 7a2 2 0 0 1 4 0v2h-4V7z"/></svg>
+                            <input id="currentPassword" type="text" value="Parol xavfsizlik sababli ko'rsatilmaydi" readonly>
+                        </div>
+                        <p class="security-hidden-note">Amaldagi parol ko'rsatilmaydi. Uni faqat yangilash mumkin.</p>
+                    </div>
+
+                    <div class="teacher-flow-profile-actions">
+                        <button type="button" class="teacher-flow-secondary-button" id="openPasswordDialog">Parolni o'zgartirish</button>
+                        <button type="submit" class="teacher-flow-primary-button">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zM7 5h8v5H7V5zm10 14H7v-6h10v6z"/></svg>
+                            Saqlash
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <div class="teacher-flow-note">
+            <span></span>
+            <p>Ma'lumotlar o'zgargandan so'ng "Saqlash" tugmasini bosing. Tizim avtomatik yangilanadi.</p>
+        </div>
+    </section>
+</main>
+
+<div class="modal-backdrop" id="passwordDialog" th:classappend="${showPasswordDialog} ? ' is-open' : ''">
+    <section class="password-modal personal-password-modal" role="dialog" aria-modal="true" aria-labelledby="passwordDialogTitle">
+        <div class="section-head">
+            <h2 id="passwordDialogTitle">Parolni o'zgartirish</h2>
+            <button type="button" class="icon-link" id="closePasswordDialog" aria-label="Yopish">x</button>
+        </div>
+        <div th:if="${passwordError}" class="message error" th:text="${passwordError}"></div>
+        <form class="grid-form compact-form" th:action="@{/teacher/profile/password}" method="post">
+            <div class="field-block wide">
+                <label for="oldPassword">Eski parol</label>
+                <input id="oldPassword" name="oldPassword" type="password" required>
+            </div>
+            <div class="field-block wide">
+                <label for="dialogNewPassword">Yangi parol</label>
+                <input id="dialogNewPassword" name="newPassword" type="password" required minlength="10">
+                <p class="security-hidden-note">Kamida 10 ta belgi, katta harf, kichik harf, raqam va maxsus belgi ishlating.</p>
+            </div>
+            <div class="field-block wide">
+                <label for="dialogConfirmPassword">Yangi parolni takrorlash</label>
+                <input id="dialogConfirmPassword" name="confirmPassword" type="password" required minlength="10">
+            </div>
+            <button type="submit">Yangilash</button>
+        </form>
+    </section>
+</div>
+
+<script>
+    const passwordDialog = document.getElementById('passwordDialog');
+    document.getElementById('openPasswordDialog')?.addEventListener('click', () => {
+        passwordDialog?.classList.add('is-open');
+    });
+    document.getElementById('closePasswordDialog')?.addEventListener('click', () => {
+        passwordDialog?.classList.remove('is-open');
+    });
+    passwordDialog?.addEventListener('click', (event) => {
+        if (event.target === passwordDialog) {
+            passwordDialog.classList.remove('is-open');
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fan Yaratish</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow">Kafedra mudiri paneli</p>
+                <h1>Fan yaratish</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/plans}">Orqaga</a>
+        </div>
+
+        <section class="content-card">
+            <div th:if="${param.subjectCreated}" class="message success">Fan yaratildi.</div>
+            <form class="grid-form" th:action="@{/plans/subjects}" th:object="${subjectForm}" method="post">
+                <div class="field-block">
+                    <label for="semester">Semestr</label>
+                    <select id="semester" th:field="*{semester}">
+                        <option value="">Tanlang</option>
+                        <option value="KUZGI">Kuzgi</option>
+                        <option value="BAHORGI">Bahorgi</option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></p>
+                </div>
+                <div class="field-block">
+                    <label for="name">Fan nomi</label>
+                    <input id="name" type="text" th:field="*{name}" placeholder="Fan nomi">
+                    <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+                <div class="field-block">
+                    <label for="department">Kafedra</label>
+                    <input id="department" type="text" th:field="*{department}" placeholder="Kafedra">
+                    <p class="field-error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+                </div>
+                <div class="field-block">
+                    <label for="faculty">Fakultet</label>
+                    <input id="faculty" type="text" th:field="*{faculty}" placeholder="Fakultet">
+                    <p class="field-error" th:if="${#fields.hasErrors('faculty')}" th:errors="*{faculty}"></p>
+                </div>
+                <div class="field-block">
+                    <label for="groupName">Guruh</label>
+                    <input id="groupName" type="text" th:field="*{groupName}" placeholder="Guruh">
+                    <p class="field-error" th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}"></p>
+                </div>
+                <div class="field-block">
+                    <label for="studentCount">Talabalar soni</label>
+                    <input id="studentCount" type="number" min="1" th:field="*{studentCount}" placeholder="Talabalar soni">
+                    <p class="field-error" th:if="${#fields.hasErrors('studentCount')}" th:errors="*{studentCount}"></p>
+                </div>
+                <button type="submit">Fan yaratish</button>
+            </form>
+        </section>
+    </section>
+</main>
+</body>
+</html>
+

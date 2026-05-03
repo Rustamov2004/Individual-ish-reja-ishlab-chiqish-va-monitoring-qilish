@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafedra Mudiri Paneli</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="enterprise-dashboard">
+    <aside class="enterprise-sidebar">
+        <div class="enterprise-brand">
+            <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1 14-4-4 1.4-1.4 2.6 2.6 5.6-5.6L18 9l-7 7z"/></svg>
+            </span>
+            <strong>PRO-ACADEMY</strong>
+        </div>
+
+        <nav class="enterprise-nav">
+            <a class="active" th:href="@{/}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg>
+                <span>Asosiy Panel</span>
+            </a>
+            <a th:href="@{/teachers}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8.5 1a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zM2 20c0-4 2.7-7 6-7s6 3 6 7H2zm11.5 0c-.3-2.1-1.2-3.9-2.5-5.2 1-.6 2.2-.8 3.5-.8 3 0 5.5 2.5 5.5 6h-6.5z"/></svg>
+                <span>Professorlar</span>
+            </a>
+            <a th:href="@{/plans}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l1 2h3v16H4V5h3l1-2zm1.2 4L8 5H7v14h10V5h-1l-1.2 2H9.2zM8 10h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+                <span>Ish Rejalari</span>
+            </a>
+            <a th:href="@{/monitoring}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16zm2-2V9h3v8H6zm5 0V5h3v12h-3zm5 0v-6h3v6h-3z"/></svg>
+                <span>Monitoring</span>
+            </a>
+            <a th:href="@{/plan-template}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5V3zm2 2v14h10V5H7zm2 3h6v2H9V8zm0 4h6v2H9v-2z"/></svg>
+                <span>Tizim Sozlamalari</span>
+            </a>
+        </nav>
+
+        <form class="enterprise-logout-form" th:action="@{/logout}" method="post">
+            <button type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17v-3H3v-4h7V7l5 5-5 5zm2 4v-2h7V5h-7V3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7z"/></svg>
+                <span>Tizimdan chiqish</span>
+            </button>
+        </form>
+    </aside>
+
+    <section class="enterprise-main">
+        <header class="enterprise-topbar">
+            <div class="enterprise-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-5.7-5.7a7 7 0 1 0-1.4 1.4L20 21l1-1zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"/></svg>
+                <input type="text" placeholder="O'qituvchi yoki reja qidirish...">
+            </div>
+
+            <div class="enterprise-profile-area">
+                <details class="enterprise-bell">
+                    <summary aria-label="Bildirishnomalar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zM18 16v-5a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2z"/></svg>
+                        <span th:if="${!#lists.isEmpty(notifications)}" th:text="${#lists.size(notifications)}">0</span>
+                    </summary>
+                    <div class="enterprise-notifications">
+                        <strong>Bildirishnomalar</strong>
+                        <a th:each="report : ${notifications}" th:href="@{/monitoring}">
+                            <span th:text="${report.teacher.fullName}">O'qituvchi</span>
+                            <small th:if="${report.status.name() == 'YUBORILGAN'}" th:text="|Yangi individual ish reja: ${report.section}: ${report.workName}|">Yangi reja</small>
+                            <small th:if="${report.status.name() != 'YUBORILGAN'}" th:text="|Yangi hisobot yuborildi: ${report.section}: ${report.workName}|">Yangi hisobot</small>
+                        </a>
+                        <p th:if="${#lists.isEmpty(notifications)}">Yangi bildirishnoma yo'q.</p>
+                    </div>
+                </details>
+                <div class="enterprise-divider"></div>
+                <div class="enterprise-user-chip">
+                    <span>AM</span>
+                    <strong th:text="${fullName}">A. Mudir</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="enterprise-content">
+            <section class="enterprise-stat-grid">
+                <article class="enterprise-stat-card">
+                    <div><svg class="emerald" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 13.8-3.6-3.6 1.4-1.4 2.2 2.2 4.8-4.8 1.4 1.4-6.2 6.2z"/></svg></div>
+                    <em>+12%</em>
+                    <p>Tasdiqlangan rejalar</p>
+                    <strong th:text="${monitoringCount}">18</strong>
+                </article>
+                <article class="enterprise-stat-card">
+                    <div><svg class="amber" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 11h5v-2h-4V6h-2v7z"/></svg></div>
+                    <em class="down">-2%</em>
+                    <p>Jarayonda</p>
+                    <strong th:text="${pendingCount}">06</strong>
+                </article>
+                <article class="enterprise-stat-card">
+                    <div><svg class="blue" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8.5 1a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zM2 20c0-4 2.7-7 6-7s6 3 6 7H2zm11.5 0c-.3-2.1-1.2-3.9-2.5-5.2 1-.6 2.2-.8 3.5-.8 3 0 5.5 2.5 5.5 6h-6.5z"/></svg></div>
+                    <em class="neutral">0%</em>
+                    <p>Jami O'qituvchilar</p>
+                    <strong th:text="${teacherCount}">24</strong>
+                </article>
+                <article class="enterprise-stat-card">
+                    <div><svg class="purple" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16zm2-2 4-5 4 3 5-8 1.7 1-6 9.5-4.3-3.2L7.6 18 6 17z"/></svg></div>
+                    <em>+5%</em>
+                    <p>KPI Ko'rsatkichi</p>
+                    <strong>92%</strong>
+                </article>
+            </section>
+
+            <section class="enterprise-hub">
+                <div class="enterprise-section-head">
+                    <div>
+                        <h2>Operatsion Boshqaruv</h2>
+                        <p>Barcha asosiy funksiyalar markazlashtirilgan</p>
+                    </div>
+                    <a th:href="@{/teachers}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
+                        Yangi ma'lumot qo'shish
+                    </a>
+                </div>
+
+                <div class="enterprise-hub-grid">
+                    <a class="enterprise-hub-card blue" th:href="@{/teachers}">
+                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8.5 1a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zM2 20c0-4 2.7-7 6-7s6 3 6 7H2zm11.5 0c-.3-2.1-1.2-3.9-2.5-5.2 1-.6 2.2-.8 3.5-.8 3 0 5.5 2.5 5.5 6h-6.5z"/></svg></span>
+                        <div><small>01</small><h3>O'qituvchi boshqaruvi</h3><p>Kafedra o'qituvchilarini qo'shish, tahrirlash va nazorat qilish.</p><strong>Boshqaruvga o'tish &gt;</strong></div>
+                    </a>
+                    <a class="enterprise-hub-card emerald" th:href="@{/plans}">
+                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l1 2h3v16H4V5h3l1-2zm1.2 4L8 5H7v14h10V5h-1l-1.2 2H9.2zM8 10h8v2H8v-2zm0 4h8v2H8v-2z"/></svg></span>
+                        <div><small>02</small><h3>Individual Ish Reja</h3><p>Yillik o'quv, ilmiy va ma'naviy ish rejalarini ko'rish portali.</p><strong>Boshqaruvga o'tish &gt;</strong></div>
+                    </a>
+                    <a class="enterprise-hub-card purple" th:href="@{/monitoring}">
+                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16zm2-2V9h3v8H6zm5 0V5h3v12h-3zm5 0v-6h3v6h-3z"/></svg></span>
+                        <div><small>03</small><h3>Monitoring Analitika</h3><p>O'qituvchilar faoliyatini real vaqt rejimida kuzatish.</p><strong>Boshqaruvga o'tish &gt;</strong></div>
+                    </a>
+                    <a class="enterprise-hub-card orange" th:href="@{/plan-template}">
+                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5V3zm2 2v14h10V5H7zm2 3h6v2H9V8zm0 4h6v2H9v-2z"/></svg></span>
+                        <div><small>04</small><h3>Shablonlar Markazi</h3><p>Tayyor shablonlarni boshqarish, yangilash va arxivlash.</p><strong>Boshqaruvga o'tish &gt;</strong></div>
+                    </a>
+                </div>
+            </section>
+
+            <section class="enterprise-activity">
+                <div class="enterprise-activity-head">
+                    <h3>Oxirgi monitoring natijalari</h3>
+                    <span>Jonli yangilanish</span>
+                </div>
+                <div class="enterprise-table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>O'qituvchi</th>
+                            <th>Bo'lim</th>
+                            <th>Bajarilishi</th>
+                            <th>Status</th>
+                            <th>Sana</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Z. Javohirbek</td>
+                            <td>O'quv ishlari</td>
+                            <td><div class="enterprise-progress"><span style="width:85%"></span><b>85%</b></div></td>
+                            <td><em>A'LO</em></td>
+                            <td>Bugun, 14:20</td>
+                        </tr>
+                        <tr>
+                            <td>M. Shunqor</td>
+                            <td>Ilmiy tadqiqot</td>
+                            <td><div class="enterprise-progress amber"><span style="width:42%"></span><b>42%</b></div></td>
+                            <td><em class="muted">JARAYONDA</em></td>
+                            <td>Bugun, 14:20</td>
+                        </tr>
+                        <tr>
+                            <td>R. Fahriddin</td>
+                            <td>Ma'naviy ishlar</td>
+                            <td><div class="enterprise-progress blue"><span style="width:100%"></span><b>100%</b></div></td>
+                            <td><em class="done">BAJARILDI</em></td>
+                            <td>Bugun, 14:20</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </section>
+</main>
+</body>
+</html>

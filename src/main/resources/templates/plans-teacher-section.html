@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bo'lim Hisobotlari</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/plans'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow" th:text="${teacher.fullName == null ? teacher.username : teacher.fullName}">O'qituvchi</p>
+                <h1 th:text="${sectionTitle}">Bo'lim</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/plans/teachers/{id}(id=${teacher.id})}">Orqaga</a>
+        </div>
+
+        <section class="content-card">
+            <div th:if="${param.deleted}" class="message success">Hisobot ro'yxatdan o'chirildi.</div>
+            <div th:replace="~{fragments/report-table :: reportTable(${reports}, ${teacher.id}, ${sectionKey})}"></div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

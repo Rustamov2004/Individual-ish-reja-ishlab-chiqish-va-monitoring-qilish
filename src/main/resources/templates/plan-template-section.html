@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${sectionTitle} + ' shabloni'">Shablon</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="work-template-shell">
+    <section class="work-template-page">
+        <div class="work-template-topbar">
+            <div>
+                <p>
+                    Individual ish reja shabloni
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m9 5 7 7-7 7-1.5-1.5L13 12 7.5 6.5 9 5z"/>
+                    </svg>
+                </p>
+                <h1>
+                    <span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 3h12v18H6V3zm2 2v14h8V5H8zm2 3h4v2h-4V8zm0 4h4v2h-4v-2z"/>
+                        </svg>
+                    </span>
+                    <b th:text="${sectionTitle}">Bo'lim</b>
+                </h1>
+            </div>
+            <a class="work-template-back" th:href="@{/plan-template}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/>
+                </svg>
+                <span>Orqaga qaytish</span>
+            </a>
+        </div>
+
+        <section class="work-template-card">
+            <div th:if="${param.uploaded}" class="message success">Shablon yangilandi.</div>
+            <div th:if="${param.default}" class="message success">Default jadval qaytarildi.</div>
+
+            <div class="work-template-info" th:if="${!template.hasCustom}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11 17h2v-6h-2v6zm0-8h2V7h-2v2zm1-7a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
+                </svg>
+                <p>Default jadval yuklandi. Kerakli shablonni fayl orqali almashtirishingiz mumkin.</p>
+            </div>
+
+            <div th:if="${template.hasCustom and !template.renderable}" class="template-file-note work-template-file-note">
+                Yuklangan fayl: <a th:href="@{/plan-template/{sectionKey}/file(sectionKey=${sectionKey})}" th:text="${template.fileName}" target="_blank">fayl</a>.
+                Bu formatni sahifada jadval qilib ko'rsatib bo'lmadi, lekin fayl ochiladi.
+            </div>
+
+            <div class="work-template-table-wrap" th:if="${template.renderable}">
+                <div class="template-custom-content" th:utext="${template.contentHtml}"></div>
+            </div>
+
+            <div th:if="${!template.renderable}">
+                <div class="work-template-table-wrap" th:if="${sectionKey == 'teaching'}">
+                    <table class="work-template-table teaching-template-preview">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>O'quv ishlari nomi, fakultet, guruh, talabalar soni</th>
+                            <th>Ma'ruza</th>
+                            <th>Amaliy mashg'ulot</th>
+                            <th>Laboratoriya ishi</th>
+                            <th>Maslahat</th>
+                            <th>Nazorat</th>
+                            <th>Taqrizlar</th>
+                            <th>Kurs ishi</th>
+                            <th>Bitiruv ishi</th>
+                            <th>DAK(BMI) rahbarligi</th>
+                            <th>Amaliyot</th>
+                            <th>ITI</th>
+                            <th>BMI ga taqriz</th>
+                            <th>Qayta topshirish</th>
+                            <th>Ball</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1.</td>
+                            <td><textarea placeholder="Fan nomi, fakultet, guruh..."></textarea></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input placeholder="0"></td>
+                            <td><input class="score-input" placeholder="Total"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="work-template-table-wrap" th:if="${sectionKey == 'methodical'}">
+                    <table class="work-template-table compact-template-preview">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Bajariladigan ishlar</th>
+                            <th>Muddat</th>
+                            <th>Ishlar hajmi</th>
+                            <th>Rejadan tashqari ishlar</th>
+                            <th>To'plangan reyting ball</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>1.</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="work-template-table-wrap" th:if="${sectionKey == 'research'}">
+                    <table class="work-template-table compact-template-preview">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Bajariladigan ishlar</th>
+                            <th>Muddat</th>
+                            <th>Ishning ijro belgisi</th>
+                            <th>Ish hajmi</th>
+                            <th>Rejadan tashqari ishlar</th>
+                            <th>To'plangan reyting ball</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>1.</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="work-template-table-wrap" th:if="${sectionKey == 'mentorship'}">
+                    <table class="work-template-table compact-template-preview">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Bajariladigan ishlar</th>
+                            <th>Muddat</th>
+                            <th>O'tkazish joyi</th>
+                            <th>Ish hajmi</th>
+                            <th>Rejadan tashqari ishlar</th>
+                            <th>To'plangan reyting ball</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>1.</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="work-template-actionbar">
+                <form class="work-template-upload" th:action="@{/plan-template/{sectionKey}(sectionKey=${sectionKey})}" method="post" enctype="multipart/form-data">
+                    <input id="template-file-input" type="file" name="file" required>
+                    <label for="template-file-input">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 20h4.2L19.5 8.7l-4.2-4.2L4 15.8V20zM16.7 3.1l4.2 4.2 1.3-1.3c.7-.7.7-1.9 0-2.6l-1.6-1.6c-.7-.7-1.9-.7-2.6 0l-1.3 1.3z"/>
+                        </svg>
+                        O'zgartirish
+                    </label>
+                    <span id="template-file-name" th:text="${template.hasCustom ? template.fileName : 'Fayl tanlanmagan'}">Fayl tanlanmagan</span>
+                    <button type="submit">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M11 3h2v10l3.5-3.5 1.4 1.4-5.9 5.9-5.9-5.9 1.4-1.4L11 13V3zM5 19h14v2H5v-2z"/>
+                        </svg>
+                        Yuklash
+                    </button>
+                </form>
+                <form class="work-template-reset" th:if="${template.hasCustom}" th:action="@{/plan-template/{sectionKey}/reset(sectionKey=${sectionKey})}" method="post">
+                    <button type="submit">Default jadval</button>
+                </form>
+            </div>
+        </section>
+
+        <button type="button" class="work-template-add-row">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/>
+            </svg>
+            Yangi qator qo'shish
+        </button>
+    </section>
+</main>
+<script>
+    const templateInput = document.getElementById('template-file-input');
+    const templateName = document.getElementById('template-file-name');
+    if (templateInput && templateName) {
+        templateInput.addEventListener('change', () => {
+            templateName.textContent = templateInput.files.length ? templateInput.files[0].name : 'Fayl tanlanmagan';
+        });
+    }
+</script>
+</body>
+</html>

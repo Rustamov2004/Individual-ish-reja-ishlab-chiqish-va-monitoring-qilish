@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Ish Rejalari</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="work-plans-shell">
+    <section class="work-plans-page">
+        <div class="work-plans-topbar">
+            <div>
+                <p class="eyebrow">Kafedra mudiri paneli</p>
+                <h1>Individual ish rejalarini ko'rish</h1>
+                <p>O'qituvchilarning yillik ish rejalarini monitoring qiling va tasdiqlang</p>
+            </div>
+            <a class="work-plans-back" th:href="@{/}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/>
+                </svg>
+                <span>Orqaga</span>
+            </a>
+        </div>
+
+        <div th:if="${param.deleted}" class="message success">Hisobot ro'yxatdan o'chirildi.</div>
+
+        <section class="work-search-card">
+            <form id="teacherSearchForm" class="work-search-form" th:action="@{/plans}" method="get">
+                <label for="teacherLiveSearch" class="work-search-input">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M10 4a6 6 0 1 0 3.7 10.7l4.8 4.8 1.4-1.4-4.8-4.8A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+                    </svg>
+                    <input id="teacherLiveSearch" type="search" name="q" th:value="${q}" placeholder="Ism yoki familiya bo'yicha qidirish..." autocomplete="off">
+                </label>
+                <button type="submit" class="work-search-submit">Qidirish</button>
+                <button type="button" class="work-search-clear" onclick="clearTeacherSearch()" title="Tozalash" aria-label="Tozalash">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5a7 7 0 1 1-6.3 4H3l4-4 4 4H7.9A5 5 0 1 0 12 7V5z"/>
+                    </svg>
+                </button>
+            </form>
+        </section>
+
+        <section class="work-list-section">
+            <h2>
+                <span>O'qituvchilar ro'yxati</span>
+                <small th:text="|(${#lists.size(teachers)} nafar)|">(0 nafar)</small>
+            </h2>
+
+            <div class="work-plan-list">
+                <a class="work-plan-card"
+                   th:each="teacher, iter : ${teachers}"
+                   th:href="@{/plans/teachers/{id}(id=${teacher.id})}"
+                   th:attr="data-search=${teacher.fullName == null ? teacher.username : teacher.fullName}">
+                    <div class="work-plan-person">
+                        <span class="work-plan-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M6 3h10l3 3v15H6V3zm9 2H8v14h9V8h-2V5zm-5 7h5v2h-5v-2zm0 4h4v2h-4v-2z"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <strong th:text="${teacher.fullName == null ? teacher.username : teacher.fullName}">O'qituvchi</strong>
+                            <p th:text="${teacher.position == null || #strings.isEmpty(teacher.position) ? 'Oqituvchi' : teacher.position}">Lavozim</p>
+                        </div>
+                    </div>
+
+                    <div class="work-plan-meta">
+                        <div class="work-status-block">
+                            <span>Holati</span>
+                            <b class="work-status-badge checking">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 2 2 20h20L12 2zm1 15h-2v-2h2v2zm0-4h-2V8h2v5z"/>
+                                </svg>
+                                Tekshirilmoqda
+                            </b>
+                        </div>
+                        <div class="work-date-block">
+                            <span>Oxirgi yangilanish</span>
+                            <b>-</b>
+                        </div>
+                        <div class="work-progress-block" th:with="progress=${iter.index % 3 == 0 ? 100 : (iter.index % 3 == 1 ? 65 : 0)}">
+                            <div>
+                                <span>Bajarilishi</span>
+                                <b th:text="|${progress}%|">0%</b>
+                            </div>
+                            <em>
+                                <i th:style="|width:${progress}%|"></i>
+                            </em>
+                        </div>
+                        <span class="work-card-arrow">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m9 5 7 7-7 7-1.5-1.5L13 12 7.5 6.5 9 5z"/>
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <p id="teacherLiveEmpty" class="muted-text" th:if="${!#lists.isEmpty(teachers)}" hidden>O'qituvchi topilmadi.</p>
+            <p th:if="${#lists.isEmpty(teachers)}" class="muted-text">O'qituvchi topilmadi.</p>
+        </section>
+    </section>
+</main>
+<script>
+    const teacherLiveSearch = document.getElementById('teacherLiveSearch');
+    const teacherCards = Array.from(document.querySelectorAll('.work-plan-card'));
+    const teacherLiveEmpty = document.getElementById('teacherLiveEmpty');
+
+    function filterTeachers() {
+        const query = (teacherLiveSearch?.value || '').trim().toLowerCase();
+        let visibleCount = 0;
+        teacherCards.forEach((card) => {
+            const fullName = (card.dataset.search || card.textContent || '').trim().toLowerCase();
+            const visible = !query || fullName.includes(query);
+            card.style.display = visible ? '' : 'none';
+            if (visible) {
+                visibleCount += 1;
+            }
+        });
+        if (teacherLiveEmpty) {
+            teacherLiveEmpty.hidden = visibleCount !== 0;
+        }
+    }
+
+    function clearTeacherSearch() {
+        if (teacherLiveSearch) {
+            teacherLiveSearch.value = '';
+        }
+        filterTeachers();
+    }
+
+    teacherLiveSearch?.addEventListener('input', filterTeachers);
+    teacherLiveSearch?.addEventListener('search', filterTeachers);
+    filterTeachers();
+</script>
+</body>
+</html>

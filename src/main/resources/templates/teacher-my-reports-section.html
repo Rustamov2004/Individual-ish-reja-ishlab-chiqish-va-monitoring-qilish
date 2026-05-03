@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hisobotlarim</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/teacher/my-reports'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow">Hisobotlarim</p>
+                <h1 th:text="${sectionTitle}">Bo'lim</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/teacher/my-reports}">Orqaga</a>
+        </div>
+
+        <section class="content-card">
+            <div th:if="${param.deleted}" class="message success">Rad etilgan hisobot o'chirildi.</div>
+            <h2 th:text="${sectionTitle} + ' hisobotlari'">Hisobotlar</h2>
+            <div class="table-wrap" th:if="${!#lists.isEmpty(reports)}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Semestr</th>
+                        <th>Ish nomi</th>
+                        <th>Individual ish reja jadvali</th>
+                        <th>Hisobot jadvali</th>
+                        <th>Mudir javobi</th>
+                        <th>O'chirish</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="report : ${reports}" th:classappend="${report.reportResponse != null && #strings.contains(report.reportResponse, 'tasdiq')} ? ' status-approved' : (${report.reportResponse != null && #strings.contains(report.reportResponse, 'rad')} ? ' status-rejected' : '')">
+                        <td th:text="${report.semester}">KUZGI</td>
+                        <td th:text="${report.workName}">Fan</td>
+                        <td><a class="mini-link" th:href="@{/reports/{id}/view(id=${report.id}, files=false)}" target="_blank" rel="noopener">Ko'rish</a></td>
+                        <td><a class="mini-link" th:href="@{/reports/{id}/view(id=${report.id}, files=true)}" target="_blank" rel="noopener">Ko'rish</a></td>
+                        <td th:text="${report.reportResponse}">hisobot tasdiqlangan</td>
+                        <td>
+                            <form th:if="${report.reportResponse != null && #strings.contains(report.reportResponse, 'rad')}" class="inline-form" th:action="@{/teacher/my-reports/{id}/delete-rejected(id=${report.id}, sectionKey=${sectionKey})}" method="post" onsubmit="return confirm('Rad etilgan hisobot ochirilsinmi?');">
+                                <button class="icon-link danger" type="submit" title="O'chirish" aria-label="Rad etilgan hisobotni o'chirish">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v9h-2V9zm4 0h2v9h-2V9zM7 9h2l1 11h4l1-11h2l-1 13H8L7 9z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                            <span th:if="${report.reportResponse == null || !#strings.contains(report.reportResponse, 'rad')}">-</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p th:if="${#lists.isEmpty(reports)}" class="muted-text">Bu bo'limda mudir ko'rib chiqqan hisobot yo'q.</p>
+        </section>
+    </section>
+</main>
+</body>
+</html>

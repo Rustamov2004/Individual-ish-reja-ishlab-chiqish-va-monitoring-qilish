@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O'qituvchi Oynasi</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="enterprise-dashboard">
+    <aside class="enterprise-sidebar">
+        <div class="enterprise-brand">
+            <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 8l10 5 8-4v6h2V8L12 3zm-6 8v4.5C6 17.4 8.7 19 12 19s6-1.6 6-3.5V11l-6 3-6-3z"/></svg>
+            </span>
+            <strong>PRO-ACADEMY</strong>
+        </div>
+
+        <nav class="enterprise-nav">
+            <a class="active" th:href="@{/teacher-panel}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg>
+                <span>Asosiy Panel</span>
+            </a>
+            <a th:href="@{/teacher/profile}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/></svg>
+                <span>Shaxsiy kabinet</span>
+            </a>
+            <a th:href="@{/teacher/plans/create}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l1 2h3v16H4V5h3l1-2zm1.2 4L8 5H7v14h10V5h-1l-1.2 2H9.2zM8 10h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+                <span>Individual reja</span>
+            </a>
+            <a th:href="@{/teacher/monitoring}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16zm2-2V9h3v8H6zm5 0V5h3v12h-3zm5 0v-6h3v6h-3z"/></svg>
+                <span>Monitoring</span>
+            </a>
+            <a th:href="@{/teacher/my-reports}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5V3zm2 2v14h10V5H7zm2 3h6v2H9V8zm0 4h6v2H9v-2z"/></svg>
+                <span>Hisobotlarim</span>
+            </a>
+        </nav>
+
+        <form class="enterprise-logout-form" th:action="@{/logout}" method="post">
+            <button type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17v-3H3v-4h7V7l5 5-5 5zm2 4v-2h7V5h-7V3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7z"/></svg>
+                <span>Tizimdan chiqish</span>
+            </button>
+        </form>
+    </aside>
+
+    <section class="enterprise-main">
+        <header class="enterprise-topbar">
+            <div class="enterprise-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-5.7-5.7a7 7 0 1 0-1.4 1.4L20 21l1-1zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"/></svg>
+                <input type="text" placeholder="Reja yoki hisobot qidirish...">
+            </div>
+
+            <div class="enterprise-profile-area">
+                <details class="enterprise-bell">
+                    <summary aria-label="Bildirishnomalar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zM18 16v-5a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2z"/></svg>
+                        <span th:if="${!#lists.isEmpty(notifications)}" th:text="${#lists.size(notifications)}">0</span>
+                    </summary>
+                    <div class="enterprise-notifications">
+                        <strong>Bildirishnomalar</strong>
+                        <a th:each="report : ${notifications}" th:if="${report.section != null && #strings.contains(report.section, 'quv ishlari')}" th:href="@{/teacher/reports/{id}/amalda(id=${report.id})}">
+                            <span>Mudir rejangizni ko'rib chiqdi</span>
+                            <small th:text="|${report.section}: ${report.workName}|">Hisobot</small>
+                        </a>
+                        <a th:each="report : ${notifications}" th:if="${report.section != null && #strings.contains(report.section, 'Ilmiy-uslubiy')}" th:href="@{/teacher/reports/{id}/methodical-amalda(id=${report.id})}">
+                            <span>Mudir rejangizni ko'rib chiqdi</span>
+                            <small th:text="|${report.section}: ${report.workName}|">Hisobot</small>
+                        </a>
+                        <a th:each="report : ${notifications}" th:if="${report.section != null && #strings.contains(report.section, 'Ilmiy-tadqiqot')}" th:href="@{/teacher/reports/{id}/research-amalda(id=${report.id})}">
+                            <span>Mudir rejangizni ko'rib chiqdi</span>
+                            <small th:text="|${report.section}: ${report.workName}|">Hisobot</small>
+                        </a>
+                        <a th:each="report : ${notifications}" th:if="${report.section != null && #strings.contains(report.section, 'Ustoz-shogird')}" th:href="@{/teacher/reports/{id}/mentorship-amalda(id=${report.id})}">
+                            <span>Mudir rejangizni ko'rib chiqdi</span>
+                            <small th:text="|${report.section}: ${report.workName}|">Hisobot</small>
+                        </a>
+                        <p th:if="${#lists.isEmpty(notifications)}">Yangi bildirishnoma yo'q.</p>
+                    </div>
+                </details>
+                <div class="enterprise-divider"></div>
+                <div class="enterprise-user-chip">
+                    <span th:text="${#strings.substring(fullName == null || #strings.isEmpty(fullName) ? username : fullName, 0, 1)}">O</span>
+                    <strong th:text="${fullName != null && !#strings.isEmpty(fullName) ? fullName : username}">O'qituvchi</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="enterprise-content">
+            <section class="enterprise-stat-grid">
+                <article class="enterprise-stat-card">
+                    <div><svg class="emerald" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 13.8-3.6-3.6 1.4-1.4 2.2 2.2 4.8-4.8 1.4 1.4-6.2 6.2z"/></svg></div>
+                    <em>+12%</em>
+                    <p>Faol bo'limlar</p>
+                    <strong th:text="${sectionProgress.?[progress > 0].size()}">4</strong>
+                </article>
+                <article class="enterprise-stat-card">
+                    <div><svg class="amber" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 11h5v-2h-4V6h-2v7z"/></svg></div>
+                    <em class="neutral">0%</em>
+                    <p>Kafedra</p>
+                    <strong th:text="${department != null && !#strings.isEmpty(department) ? department : 'DIF'}">DIF</strong>
+                </article>
+                <article class="enterprise-stat-card">
+                    <div><svg class="blue" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8.5 1a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zM2 20c0-4 2.7-7 6-7s6 3 6 7H2zm11.5 0c-.3-2.1-1.2-3.9-2.5-5.2 1-.6 2.2-.8 3.5-.8 3 0 5.5 2.5 5.5 6h-6.5z"/></svg></div>
+                    <em class="neutral">0%</em>
+                    <p>Lavozim</p>
+                    <strong th:text="${position != null && !#strings.isEmpty(position) ? position : 'O''qituvchi'}">O'qituvchi</strong>
+                </article>
+                <article class="enterprise-stat-card">
+                    <div><svg class="purple" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16zm2-2 4-5 4 3 5-8 1.7 1-6 9.5-4.3-3.2L7.6 18 6 17z"/></svg></div>
+                    <em>+5%</em>
+                    <p>O'rtacha bajarilish</p>
+                    <strong th:text="${averageProgress} + '%'">0%</strong>
+                </article>
+            </section>
+
+            <section class="teacher-progress-panel">
+                <div class="enterprise-section-head">
+                    <div>
+                        <h2>Yangi yuborilgan ish rejalar</h2>
+                        <p>Har bir bo'limning bajarilish foizi alohida ko'rsatiladi</p>
+                    </div>
+                    <a th:href="@{/teacher/monitoring}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16zm2-2V9h3v8H6zm5 0V5h3v12h-3zm5 0v-6h3v6h-3z"/></svg>
+                        Monitoring tahlili
+                    </a>
+                </div>
+
+                <div class="teacher-progress-grid">
+                    <a class="teacher-progress-card" th:each="item : ${sectionProgress}" th:href="@{/teacher/monitoring/{sectionKey}(sectionKey=${item.sectionKey})}">
+                        <div class="teacher-progress-card-head">
+                            <strong th:text="${item.sectionTitle}">O'quv ishlari</strong>
+                            <span th:text="${item.progress} + '%'">25%</span>
+                        </div>
+                        <div class="teacher-progress-bar">
+                            <span th:style="'width:' + ${item.progress} + '%'"></span>
+                        </div>
+                        <em th:text="${item.status}">Yuborilgan</em>
+                        <p th:text="${item.note}">Mudir ko'rib chiqishi kutilmoqda</p>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </section>
+</main>
+</body>
+</html>

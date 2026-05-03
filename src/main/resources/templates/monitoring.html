@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="monitoring-shell">
+    <section class="monitoring-page">
+        <div class="monitoring-topbar">
+            <div>
+                <p class="eyebrow">Kafedra mudiri paneli</p>
+                <h1>Individual ish rejalarini monitoring qilish</h1>
+            </div>
+            <a class="monitoring-back" th:href="@{/}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/>
+                </svg>
+                <span>Orqaga</span>
+            </a>
+        </div>
+
+        <section class="monitoring-stats">
+            <article class="monitoring-stat-card blue">
+                <div>
+                    <span>Yangi hisobotlar</span>
+                    <strong th:text="${#lists.size(reports)}">0</strong>
+                </div>
+                <i>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 3h10l3 3v15H6V3zm9 2H8v14h9V8h-2V5zm-5 7h5v2h-5v-2zm0 4h4v2h-4v-2z"/>
+                    </svg>
+                </i>
+            </article>
+            <article class="monitoring-stat-card amber">
+                <div>
+                    <span>Javob kutilmoqda</span>
+                    <strong th:text="${reports.?[status.name() == 'YUBORILGAN'].size()}">0</strong>
+                </div>
+                <i>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 4h16v12H7l-3 3V4zm4 4v2h8V8H8zm0 4v2h6v-2H8z"/>
+                    </svg>
+                </i>
+            </article>
+            <article class="monitoring-stat-card violet">
+                <div>
+                    <span>Ko'rib chiqilmoqda</span>
+                    <strong th:text="${#lists.size(reports)}">0</strong>
+                </div>
+                <i>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M10 4a6 6 0 1 0 3.7 10.7l4.8 4.8 1.4-1.4-4.8-4.8A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+                    </svg>
+                </i>
+            </article>
+            <article class="monitoring-stat-card rose">
+                <div>
+                    <span>Yangi yuborilganlar</span>
+                    <strong th:text="${#lists.size(reports)}">0</strong>
+                </div>
+                <i>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 20 21 12 3 4v6l11 2-11 2v6z"/>
+                    </svg>
+                </i>
+            </article>
+        </section>
+
+        <section class="monitoring-table-card">
+            <div th:if="${param.approved}" class="message success">Individual ish reja tasdiqlandi.</div>
+            <div th:if="${param.rejected}" class="message error">Individual ish reja rad etildi.</div>
+            <div th:if="${param.reportApproved}" class="message success">Yuborilgan hisobot tasdiqlandi.</div>
+            <div th:if="${param.reportRejected}" class="message error">Yuborilgan hisobot rad etildi.</div>
+            <div th:if="${param.reportCommentRequired}" class="message error">Hisobot uchun sharh yozish majburiy.</div>
+
+            <div class="monitoring-table-head">
+                <h2>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 19h16v2H2V3h2v16zm2-2V9h3v8H6zm5 0V5h3v12h-3zm5 0v-6h3v6h-3z"/>
+                    </svg>
+                    <span>Monitoring jadvali</span>
+                </h2>
+                <span>2023-2024 o'quv yili</span>
+            </div>
+
+            <div class="monitoring-table-wrap">
+                <table class="monitoring-modern-table">
+                    <thead>
+                    <tr>
+                        <th>O'qituvchi va bo'lim</th>
+                        <th class="center">Semestr</th>
+                        <th>Ish turi</th>
+                        <th class="center">Ish rejasi</th>
+                        <th class="center">Holat</th>
+                        <th class="center">Amallar</th>
+                        <th>Hisobot / Sharh</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="report : ${reports}">
+                        <td>
+                            <div class="monitoring-person">
+                                <span th:text="${#strings.substring(report.teacher.fullName == null || #strings.isEmpty(report.teacher.fullName) ? report.teacher.username : report.teacher.fullName, 0, 1)}">O</span>
+                                <div>
+                                    <strong th:text="${report.teacher.fullName == null ? report.teacher.username : report.teacher.fullName}">O'qituvchi</strong>
+                                    <small th:text="${report.section == null ? 'Oquv ishlari' : report.section}">Bo'lim</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="center">
+                            <span class="semester-pill" th:text="${report.semester}">KUZGI</span>
+                        </td>
+                        <td>
+                            <span class="monitoring-work" th:text="${report.workName}">Fan</span>
+                        </td>
+                        <td class="center">
+                            <a class="monitoring-view-link" th:href="@{/reports/{id}/view(id=${report.id}, files=false)}" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 5c5 0 8.7 4.4 9.8 6.1.2.3.2.7 0 1C20.7 13.8 17 18 12 18s-8.7-4.2-9.8-5.9a1 1 0 0 1 0-1C3.3 9.4 7 5 12 5zm0 2c-3.7 0-6.6 2.8-7.7 4.6C5.4 13.3 8.3 16 12 16s6.6-2.7 7.7-4.4C18.6 9.8 15.7 7 12 7zm0 2a2.6 2.6 0 1 1 0 5.2A2.6 2.6 0 0 1 12 9z"/>
+                                </svg>
+                                Ko'rish
+                            </a>
+                        </td>
+                        <td class="center">
+                            <span class="monitoring-status" th:classappend="${report.status.name() == 'YUBORILGAN'} ? ' pending' : ' reviewed'" th:text="${report.status}">YUBORILGAN</span>
+                        </td>
+                        <td>
+                            <div th:if="${report.status.name() == 'YUBORILGAN'}" class="monitoring-actions">
+                                <form th:action="@{/monitoring/{id}/approve(id=${report.id})}" method="post" class="inline-form">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <input type="hidden" name="response" value="tasdiqlangan">
+                                    <button type="submit" class="monitoring-approve">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m9 16.2-3.5-3.5L4 14.2 9 19 20 8l-1.5-1.5L9 16.2z"/>
+                                        </svg>
+                                        Tasdiqlash
+                                    </button>
+                                </form>
+                                <form th:action="@{/monitoring/{id}/reject(id=${report.id})}" method="post" class="inline-form">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <input type="hidden" name="response" value="rad etilgan">
+                                    <button type="submit" class="monitoring-reject">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 10.6 4.6-4.6L18 7.4 13.4 12l4.6 4.6-1.4 1.4-4.6-4.6L7.4 18 6 16.6l4.6-4.6L6 7.4 7.4 6l4.6 4.6z"/>
+                                        </svg>
+                                        Rad etish
+                                    </button>
+                                </form>
+                            </div>
+                            <span class="monitoring-response" th:if="${report.status.name() != 'YUBORILGAN'}" th:text="${report.headResponse == null ? '-' : report.headResponse}">tasdiqlangan</span>
+                        </td>
+                        <td>
+                            <div class="monitoring-report-cell">
+                                <a th:if="${report.amaldaFiles != null && !#strings.isEmpty(report.amaldaFiles)}"
+                                   class="monitoring-view-link"
+                                   th:href="@{/reports/{id}/view(id=${report.id}, files=true)}"
+                                   target="_blank"
+                                   rel="noopener">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 5c5 0 8.7 4.4 9.8 6.1.2.3.2.7 0 1C20.7 13.8 17 18 12 18s-8.7-4.2-9.8-5.9a1 1 0 0 1 0-1C3.3 9.4 7 5 12 5zm0 2c-3.7 0-6.6 2.8-7.7 4.6C5.4 13.3 8.3 16 12 16s6.6-2.7 7.7-4.4C18.6 9.8 15.7 7 12 7zm0 2a2.6 2.6 0 1 1 0 5.2A2.6 2.6 0 0 1 12 9z"/>
+                                    </svg>
+                                    Hisobotni ko'rish
+                                </a>
+                                <div th:if="${report.amaldaFiles != null && !#strings.isEmpty(report.amaldaFiles) && (report.reportResponse == null || #strings.isEmpty(report.reportResponse))}" class="monitoring-report-review">
+                                    <form th:id="|reportDecision-${report.id}|"
+                                          th:action="@{/monitoring/{id}/report/approve(id=${report.id})}"
+                                          method="post"
+                                          class="monitoring-comment-form">
+                                        <label th:for="|reportComment-${report.id}|">Hisobot uchun sharh</label>
+                                        <textarea th:id="|reportComment-${report.id}|"
+                                                  name="response"
+                                                  required
+                                                  minlength="2"
+                                                  placeholder="Mudir fikrini yozing"></textarea>
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    </form>
+                                    <div class="monitoring-actions inline">
+                                        <button type="submit"
+                                                th:attr="form=|reportDecision-${report.id}|,formaction=@{/monitoring/{id}/report/approve(id=${report.id})}"
+                                                class="monitoring-approve">Tasdiqlash</button>
+                                        <button type="submit"
+                                                th:attr="form=|reportDecision-${report.id}|,formaction=@{/monitoring/{id}/report/reject(id=${report.id})}"
+                                                class="monitoring-reject">Rad etish</button>
+                                    </div>
+                                </div>
+                                <span th:if="${(report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles)) && report.methodicalPenalty}" class="monitoring-note danger">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 2 2 20h20L12 2zm1 15h-2v-2h2v2zm0-4h-2V8h2v5z"/>
+                                    </svg>
+                                    Jazo: muddat o'tgan
+                                </span>
+                                <span th:if="${(report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles)) && !report.methodicalPenalty}" class="monitoring-note">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 2 2 20h20L12 2zm1 15h-2v-2h2v2zm0-4h-2V8h2v5z"/>
+                                    </svg>
+                                    Hali yuborilmagan
+                                </span>
+                                <span th:if="${report.reportResponse != null && !#strings.isEmpty(report.reportResponse)}" class="monitoring-response" th:text="${report.reportResponse}">hisobot javobi</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(reports)}">
+                        <td colspan="7">Hozircha o'qituvchilardan hisobot kelmagan.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

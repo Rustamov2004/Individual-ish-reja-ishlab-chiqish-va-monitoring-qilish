@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hisobot yuborish</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow">Tasdiqlangan reja</p>
+                <h1>Hisobot yuborish</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/teacher/monitoring}">Orqaga</a>
+        </div>
+
+        <section class="content-card">
+            <form id="amaldaOnlyForm" class="grid-form amalda-report-form" th:action="@{/teacher/reports/{id}/amalda(id=${report.id})}" th:object="${reportForm}" method="post" enctype="multipart/form-data">
+                <div class="message error field-block wide" th:if="${#fields.hasAnyErrors()}">Qiymat bor ustunlar uchun fayl yuklash majburiy.</div>
+
+                <input type="hidden" th:field="*{semester}">
+                <input type="hidden" th:field="*{workName}">
+                <input type="hidden" th:field="*{faculty}">
+                <input type="hidden" th:field="*{groupName}">
+                <input type="hidden" th:field="*{studentCount}">
+
+                <article class="plan-card">
+                    <div class="plan-card-head">
+                        <span class="feature-index">01</span>
+                        <h2>O'QUV ISHLARI HISOBOTI</h2>
+                    </div>
+                    <div class="readonly-summary">
+                        <strong th:text="${report.workName}">Fan</strong>
+                        <span th:text="|${report.faculty}, ${report.groupName}, ${report.studentCount} talaba|">Ma'lumot</span>
+                    </div>
+
+                    <div class="two-column-fields">
+                        <div class="column-card">
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Ma'ruza</label><input type="number" th:field="*{maruza}" readonly data-required-file="maruzaAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{maruzaJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="maruzaAmaldaFile" class="file-upload-input" type="file" th:field="*{maruzaAmaldaFile}"><label class="file-upload-button" for="maruzaAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Amaliy mashg'ulot</label><input type="number" th:field="*{amaliyMashgulot}" readonly data-required-file="amaliyMashgulotAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{amaliyMashgulotJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="amaliyMashgulotAmaldaFile" class="file-upload-input" type="file" th:field="*{amaliyMashgulotAmaldaFile}"><label class="file-upload-button" for="amaliyMashgulotAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Laboratoriya ishi</label><input type="number" th:field="*{laboratoriyaIshi}" readonly data-required-file="laboratoriyaIshiAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{laboratoriyaIshiJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="laboratoriyaIshiAmaldaFile" class="file-upload-input" type="file" th:field="*{laboratoriyaIshiAmaldaFile}"><label class="file-upload-button" for="laboratoriyaIshiAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Maslahat</label><input type="number" th:field="*{maslahat}" readonly data-required-file="maslahatAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{maslahatJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="maslahatAmaldaFile" class="file-upload-input" type="file" th:field="*{maslahatAmaldaFile}"><label class="file-upload-button" for="maslahatAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Nazorat</label><input type="number" th:field="*{nazorat}" readonly data-required-file="nazoratAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{nazoratJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="nazoratAmaldaFile" class="file-upload-input" type="file" th:field="*{nazoratAmaldaFile}"><label class="file-upload-button" for="nazoratAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Taqrizlar</label><input type="number" th:field="*{taqrizlar}" readonly data-required-file="taqrizlarAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{taqrizlarJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="taqrizlarAmaldaFile" class="file-upload-input" type="file" th:field="*{taqrizlarAmaldaFile}"><label class="file-upload-button" for="taqrizlarAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Kurs ishi</label><input type="number" th:field="*{kursIshi}" readonly data-required-file="kursIshiAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{kursIshiJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="kursIshiAmaldaFile" class="file-upload-input" type="file" th:field="*{kursIshiAmaldaFile}"><label class="file-upload-button" for="kursIshiAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                        </div>
+
+                        <div class="column-card">
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Bitiruv ishi</label><input type="number" th:field="*{bitiruvIshi}" readonly data-required-file="bitiruvIshiAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{bitiruvIshiJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="bitiruvIshiAmaldaFile" class="file-upload-input" type="file" th:field="*{bitiruvIshiAmaldaFile}"><label class="file-upload-button" for="bitiruvIshiAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>DAK(BMI) rahbarligi</label><input type="number" th:field="*{dakBmiRahbarligi}" readonly data-required-file="dakBmiRahbarligiAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{dakBmiRahbarligiJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="dakBmiRahbarligiAmaldaFile" class="file-upload-input" type="file" th:field="*{dakBmiRahbarligiAmaldaFile}"><label class="file-upload-button" for="dakBmiRahbarligiAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Amaliyot</label><input type="number" th:field="*{amaliyot}" readonly data-required-file="amaliyotAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{amaliyotJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="amaliyotAmaldaFile" class="file-upload-input" type="file" th:field="*{amaliyotAmaldaFile}"><label class="file-upload-button" for="amaliyotAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>ITI</label><input type="number" th:field="*{iti}" readonly data-required-file="itiAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{itiJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="itiAmaldaFile" class="file-upload-input" type="file" th:field="*{itiAmaldaFile}"><label class="file-upload-button" for="itiAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>BMI ga taqriz</label><input type="number" th:field="*{bmiGaTaqriz}" readonly data-required-file="bmiGaTaqrizAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{bmiGaTaqrizJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="bmiGaTaqrizAmaldaFile" class="file-upload-input" type="file" th:field="*{bmiGaTaqrizAmaldaFile}"><label class="file-upload-button" for="bmiGaTaqrizAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>Qayta topshirish</label><input type="number" th:field="*{qaytaTopshirish}" readonly data-required-file="qaytaTopshirishAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{qaytaTopshirishJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="qaytaTopshirishAmaldaFile" class="file-upload-input" type="file" th:field="*{qaytaTopshirishAmaldaFile}"><label class="file-upload-button" for="qaytaTopshirishAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                            <div class="triple-metric-row amalda-upload-row">
+                                <div class="metric-box"><label>To'plangan reyting bali</label><input type="number" th:field="*{ratingBall}" readonly data-required-file="ratingBallAmaldaFile"></div>
+                                <div class="metric-box narrow-box"><label>jami</label><input type="number" th:field="*{ratingBallJami}" readonly></div>
+                                <div class="metric-box"><label>amalda</label><div class="file-upload-control"><input id="ratingBallAmaldaFile" class="file-upload-input" type="file" th:field="*{ratingBallAmaldaFile}"><label class="file-upload-button" for="ratingBallAmaldaFile"><span>+</span> Fayl</label><span class="file-upload-name">Fayl tanlanmagan</span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <button type="submit" class="submit-report-button">Hisobot yuborish</button>
+            </form>
+        </section>
+    </section>
+</main>
+<script>
+    const amaldaOnlyForm = document.getElementById('amaldaOnlyForm');
+    amaldaOnlyForm?.addEventListener('submit', (event) => {
+        let firstMissingFile = null;
+        document.querySelectorAll('[data-required-file]').forEach((sourceInput) => {
+            const fileInput = document.getElementById(sourceInput.dataset.requiredFile);
+            const uploadControl = fileInput?.closest('.file-upload-control');
+            const hasValue = sourceInput.value.trim() !== '';
+            const hasFile = fileInput && fileInput.files.length > 0;
+
+            uploadControl?.classList.remove('input-warning');
+            if (hasValue && !hasFile) {
+                uploadControl?.classList.add('input-warning');
+                firstMissingFile = firstMissingFile || uploadControl;
+            }
+        });
+
+        if (firstMissingFile) {
+            event.preventDefault();
+            firstMissingFile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+
+    document.querySelectorAll('.file-upload-input').forEach((input) => {
+        const fileName = input.closest('.file-upload-control')?.querySelector('.file-upload-name');
+        input.addEventListener('change', () => {
+            if (fileName) {
+                fileName.textContent = input.files.length ? input.files[0].name : 'Fayl tanlanmagan';
+            }
+        });
+    });
+</script>
+</body>
+</html>

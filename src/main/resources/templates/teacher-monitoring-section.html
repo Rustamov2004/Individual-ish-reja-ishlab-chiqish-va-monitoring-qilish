@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Tahlili</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/teacher/monitoring'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow">Monitoring tahlili</p>
+                <h1 th:text="${sectionTitle}">Bo'lim</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/teacher/monitoring}">Orqaga</a>
+        </div>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span>Jami</span>
+                <strong th:text="${#lists.size(reports)}">0</strong>
+            </article>
+            <article class="stat-card">
+                <span>Tasdiqlangan rejalar</span>
+                <strong th:text="${reports.?[headResponse != null && #strings.contains(headResponse, 'tasdiq')].size()}">0</strong>
+            </article>
+            <article class="stat-card">
+                <span>Javob kutilmoqda</span>
+                <strong th:text="${reports.?[status.name() == 'YUBORILGAN'].size()}">0</strong>
+            </article>
+        </section>
+
+        <section class="content-card">
+            <div th:if="${param.submitted}" class="message success">Hisobot kafedra mudiriga yuborildi.</div>
+            <div th:if="${param.filesUploaded}" class="message success">Hisobot fayllari yuborildi.</div>
+            <div th:if="${param.deleted}" class="message success">Rad etilgan reja o'chirildi.</div>
+            <h2>Tahlil jadvali</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Bo'lim</th>
+                        <th>Ish nomi</th>
+                        <th>Semestr</th>
+                        <th>Individual ish reja jadvali</th>
+                        <th>Individual ish reja holati</th>
+                        <th>Mudir javobi</th>
+                        <th>Hisobot yuborish</th>
+                        <th>Hisobot jadvali</th>
+                        <th>Hisobot uchun sharh</th>
+                        <th>O'chirish</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="report : ${reports}" th:classappend="${report.status.name() == 'YUBORILGAN'} ? ' status-pending' : (${report.headResponse != null && #strings.contains(report.headResponse, 'tasdiq')} ? ' status-approved' : (${report.headResponse != null && #strings.contains(report.headResponse, 'rad')} ? ' status-rejected' : ''))">
+                        <td th:text="${report.section == null ? 'Oquv ishlari' : report.section}">O'quv ishlari</td>
+                        <td th:text="${report.workName}">Fan</td>
+                        <td th:text="${report.semester}">KUZGI</td>
+                        <td>
+                            <a class="mini-link" th:href="@{/reports/{id}/view(id=${report.id}, files=false)}" target="_blank" rel="noopener">Ko'rish</a>
+                        </td>
+                        <td th:text="${report.status.name() == 'YUBORILGAN' ? 'YUBORILGAN' : (report.headResponse == null ? report.status : report.headResponse)}">YUBORILGAN</td>
+                        <td th:text="${report.headResponse == null ? 'Hali javob kelmagan' : report.headResponse}">Javob</td>
+                        <td class="action-cell">
+                            <a th:if="${report.headResponse != null && #strings.contains(report.headResponse, 'tasdiq') && (report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles) || (report.reportResponse != null && #strings.contains(report.reportResponse, 'rad'))) && report.section != null && #strings.contains(report.section, 'quv ishlari')}" class="icon-link report-submit-icon" th:href="@{/teacher/reports/{id}/amalda(id=${report.id})}" title="Hisobot yuborish" aria-label="Hisobot yuborish">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 3l5 5h-3v6h-4V8H7l5-5zM5 15h2v4h10v-4h2v6H5v-6z"/>
+                                </svg>
+                            </a>
+                            <a th:if="${report.headResponse != null && #strings.contains(report.headResponse, 'tasdiq') && (report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles) || (report.reportResponse != null && #strings.contains(report.reportResponse, 'rad'))) && report.section != null && #strings.contains(report.section, 'Ilmiy-uslubiy')}" class="icon-link report-submit-icon" th:href="@{/teacher/reports/{id}/methodical-amalda(id=${report.id})}" title="Hisobot yuborish" aria-label="Hisobot yuborish">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 3l5 5h-3v6h-4V8H7l5-5zM5 15h2v4h10v-4h2v6H5v-6z"/>
+                                </svg>
+                            </a>
+                            <a th:if="${report.headResponse != null && #strings.contains(report.headResponse, 'tasdiq') && (report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles) || (report.reportResponse != null && #strings.contains(report.reportResponse, 'rad'))) && report.section != null && #strings.contains(report.section, 'Ilmiy-tadqiqot')}" class="icon-link report-submit-icon" th:href="@{/teacher/reports/{id}/research-amalda(id=${report.id})}" title="Hisobot yuborish" aria-label="Hisobot yuborish">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 3l5 5h-3v6h-4V8H7l5-5zM5 15h2v4h10v-4h2v6H5v-6z"/>
+                                </svg>
+                            </a>
+                            <a th:if="${report.headResponse != null && #strings.contains(report.headResponse, 'tasdiq') && (report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles) || (report.reportResponse != null && #strings.contains(report.reportResponse, 'rad'))) && report.section != null && #strings.contains(report.section, 'Ustoz-shogird')}" class="icon-link report-submit-icon" th:href="@{/teacher/reports/{id}/mentorship-amalda(id=${report.id})}" title="Hisobot yuborish" aria-label="Hisobot yuborish">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 3l5 5h-3v6h-4V8H7l5-5zM5 15h2v4h10v-4h2v6H5v-6z"/>
+                                </svg>
+                            </a>
+                            <span th:if="${report.amaldaFiles != null && !#strings.isEmpty(report.amaldaFiles) && (report.reportResponse == null || #strings.isEmpty(report.reportResponse))}">Javob kutilmoqda</span>
+                            <span th:if="${report.headResponse == null || !#strings.contains(report.headResponse, 'tasdiq') || (report.reportResponse != null && #strings.contains(report.reportResponse, 'tasdiq')) || report.section == null || (!#strings.contains(report.section, 'quv ishlari') && !#strings.contains(report.section, 'Ilmiy-uslubiy') && !#strings.contains(report.section, 'Ilmiy-tadqiqot') && !#strings.contains(report.section, 'Ustoz-shogird'))}">-</span>
+                        </td>
+                        <td>
+                            <a th:if="${report.amaldaFiles != null && !#strings.isEmpty(report.amaldaFiles)}" class="mini-link" th:href="@{/reports/{id}/view(id=${report.id}, files=true)}" target="_blank" rel="noopener">Ko'rish</a>
+                            <span th:if="${report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles)}">-</span>
+                        </td>
+                        <td>
+                            <span th:if="${report.reportResponse != null && !#strings.isEmpty(report.reportResponse)}" th:text="${report.reportResponse}">hisobot javobi</span>
+                            <span th:if="${(report.amaldaFiles != null && !#strings.isEmpty(report.amaldaFiles)) && (report.reportResponse == null || #strings.isEmpty(report.reportResponse))}">Javob kutilmoqda</span>
+                            <span th:if="${report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles)}">Hali yuborilmagan</span>
+                        </td>
+                        <td>
+                            <form th:if="${report.headResponse != null && #strings.contains(report.headResponse, 'rad')}" class="inline-form" th:action="@{/teacher/monitoring/{id}/delete-rejected-plan(id=${report.id}, sectionKey=${sectionKey})}" method="post" onsubmit="return confirm('Rad etilgan reja ochirilsinmi?');">
+                                <button class="icon-link danger" type="submit" title="O'chirish" aria-label="Rad etilgan rejani o'chirish">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v9h-2V9zm4 0h2v9h-2V9zM7 9h2l1 11h4l1-11h2l-1 13H8L7 9z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                            <span th:if="${report.headResponse == null || !#strings.contains(report.headResponse, 'rad')}">-</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(reports)}">
+                        <td colspan="10">Bu bo'limda hisobot yuborish kutilayotgan reja yo'q.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

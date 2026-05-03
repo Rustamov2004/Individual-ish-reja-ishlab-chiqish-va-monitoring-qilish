@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ustoz-Shogird Ishlari</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="teacher-flow-shell">
+    <section class="teacher-flow-page teacher-flow-table-page">
+        <div class="teacher-flow-topbar">
+            <div>
+                <p class="teacher-flow-eyebrow">O'qituvchi oynasi</p>
+                <h1>Ustoz-shogird ishlari</h1>
+            </div>
+            <a class="teacher-flow-back-link" th:href="@{/teacher/plans/create}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/></svg>
+                Orqaga
+            </a>
+        </div>
+
+        <section class="teacher-flow-table-card">
+            <form id="mentorshipReportForm" class="teacher-flow-table-form" th:action="@{/teacher/plans/mentorship}" th:object="${mentorshipForm}" method="post">
+                <div class="message error" th:if="${#fields.hasAnyErrors()}">Ma'lumotlarni to'g'ri kiriting.</div>
+                <input id="bajariladiganIshlar" type="hidden" th:field="*{bajariladiganIshlar}">
+                <input id="muddat" type="hidden" th:field="*{muddat}">
+                <input id="otkazishJoyi" type="hidden" th:field="*{otkazishJoyi}">
+                <input id="ishHajmi" type="hidden" th:field="*{ishHajmi}">
+                <input id="rejadanTashqariIshlar" type="hidden" th:field="*{rejadanTashqariIshlar}">
+                <input id="ratingBall" type="hidden" th:field="*{ratingBall}">
+                <p class="field-error" th:if="${#fields.hasErrors('muddat')}" th:errors="*{muddat}">Muddat majburiy</p>
+
+                <div class="teacher-flow-table-head">
+                    <span>04</span>
+                    <h2>Ustoz-shogird ishlari hisoboti</h2>
+                </div>
+
+                <div class="teacher-custom-template teacher-custom-template-compact" th:if="${template != null && template.renderable}" th:utext="${template.contentHtml}"></div>
+                <div class="teacher-flow-table-wrap" th:if="${template == null || !template.renderable}">
+                    <table class="teacher-flow-data-table">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Bajariladigan ishlar</th>
+                            <th>Muddat</th>
+                            <th>O'tkazish joyi</th>
+                            <th>Ish hajmi</th>
+                            <th>Rejadan tashqari ishlar</th>
+                            <th>To'plangan reyting ball</th>
+                        </tr>
+                        </thead>
+                        <tbody id="mentorshipRowsBody">
+                        <tr>
+                            <td>1.</td>
+                            <td contenteditable="true" data-field="bajariladiganIshlar"></td>
+                            <td class="teacher-date-range-cell" data-field="muddat">
+                                <div class="teacher-date-range" data-field="muddat">
+                                    <input type="date" data-date-part="start" required>
+                                    <input type="date" data-date-part="end" required>
+                                </div>
+                            </td>
+                            <td contenteditable="true" data-field="otkazishJoyi"></td>
+                            <td contenteditable="true" data-field="ishHajmi"></td>
+                            <td contenteditable="true" data-field="rejadanTashqariIshlar"></td>
+                            <td contenteditable="true" data-field="ratingBall"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="teacher-flow-table-actions">
+                    <button type="button" id="newMentorshipRow" class="teacher-flow-secondary-button" th:if="${template == null || !template.renderable}">Yangi qator</button>
+                    <button type="submit" class="teacher-flow-primary-button">Rejani yuborish</button>
+                </div>
+            </form>
+        </section>
+    </section>
+</main>
+<script>
+    const mentorshipReportForm = document.getElementById('mentorshipReportForm');
+    const delimiter = '|||ROW|||';
+    const mentorshipFields = ['bajariladiganIshlar', 'muddat', 'otkazishJoyi', 'ishHajmi', 'rejadanTashqariIshlar', 'ratingBall'];
+    const mentorshipRowsBody = document.getElementById('mentorshipRowsBody');
+
+    function syncMentorshipRowsToForm() {
+        const customRows = readCustomRows(mentorshipFields);
+        if (customRows.length) {
+            mentorshipFields.forEach((field) => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.value = customRows.map((row) => row[field] || '').join(delimiter);
+                }
+            });
+            return;
+        }
+        if (!mentorshipRowsBody) {
+            return;
+        }
+        const rows = Array.from(mentorshipRowsBody.querySelectorAll('tr')).map((row) => {
+            return Object.fromEntries(mentorshipFields.map((field) => [field, readFieldValue(row, field)]));
+        }).filter((row) => mentorshipFields.some((field) => row[field] !== ''));
+        mentorshipFields.forEach((field) => {
+            const input = document.getElementById(field);
+            if (input) {
+                input.value = rows.map((row) => row[field] || '').join(delimiter);
+            }
+        });
+    }
+
+    function prepareCustomTemplate() {
+        document.querySelectorAll('.teacher-custom-template td').forEach((cell) => {
+            cell.contentEditable = 'true';
+            cell.addEventListener('input', () => cell.dataset.edited = 'true');
+        });
+        enhanceCustomTemplateDateRanges();
+    }
+
+    function readCustomRows(fields) {
+        return Array.from(document.querySelectorAll('.teacher-custom-template tr')).map((row) => {
+            const cells = Array.from(row.querySelectorAll('td'));
+            if (!cells.some((cell) => cell.dataset.edited === 'true')) {
+                return null;
+            }
+            const values = cells.map((cell) => cell.querySelector('.teacher-date-range')
+                ? combineDateRange(
+                    cell.querySelector('[data-date-part="start"]')?.value || '',
+                    cell.querySelector('[data-date-part="end"]')?.value || ''
+                )
+                : cell.textContent.trim());
+            const offset = values.length > fields.length ? 1 : 0;
+            return Object.fromEntries(fields.map((field, index) => [field, values[offset + index] || '']));
+        }).filter(Boolean);
+    }
+
+    function combineDateRange(start, end) {
+        if (!start || !end) {
+            return '';
+        }
+        return `${start} - ${end}`;
+    }
+
+    function readFieldValue(row, field) {
+        const target = row.querySelector(`[data-field="${field}"]`);
+        if (!target) {
+            return '';
+        }
+        const range = target.querySelector('.teacher-date-range');
+        if (!range) {
+            return target.textContent.trim();
+        }
+        const start = range.querySelector('[data-date-part="start"]')?.value || '';
+        const end = range.querySelector('[data-date-part="end"]')?.value || '';
+        return combineDateRange(start, end);
+    }
+
+    function enhanceCustomTemplateDateRanges() {
+        document.querySelectorAll('.teacher-custom-template').forEach((template) => {
+            const rows = Array.from(template.querySelectorAll('tr'));
+            if (!rows.length) {
+                return;
+            }
+            const headerCells = Array.from(rows[0].querySelectorAll('td'));
+            const muddatIndex = headerCells.findIndex((cell) => cell.textContent.toLowerCase().includes('muddat'));
+            if (muddatIndex === -1) {
+                return;
+            }
+            rows.slice(1).forEach((row) => {
+                const cells = row.querySelectorAll('td');
+                const cell = cells[muddatIndex];
+                if (!cell || cell.querySelector('.teacher-date-range')) {
+                    return;
+                }
+                const parts = (cell.textContent || '').split('-').map((item) => item.trim());
+                cell.contentEditable = 'false';
+                cell.innerHTML = `
+                    <div class="teacher-date-range" data-field="muddat">
+                        <input type="date" data-date-part="start" value="${parts[0] || ''}" required>
+                        <input type="date" data-date-part="end" value="${parts[1] || ''}" required>
+                    </div>
+                `;
+                cell.dataset.edited = 'true';
+                cell.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', () => cell.dataset.edited = 'true');
+                });
+            });
+        });
+    }
+
+    prepareCustomTemplate();
+
+    document.getElementById('newMentorshipRow')?.addEventListener('click', () => {
+        const rowNumber = mentorshipRowsBody.querySelectorAll('tr').length + 1;
+        mentorshipRowsBody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td>${rowNumber}.</td>
+                <td contenteditable="true" data-field="bajariladiganIshlar"></td>
+                <td class="teacher-date-range-cell" data-field="muddat">
+                    <div class="teacher-date-range" data-field="muddat">
+                        <input type="date" data-date-part="start" required>
+                        <input type="date" data-date-part="end" required>
+                    </div>
+                </td>
+                <td contenteditable="true" data-field="otkazishJoyi"></td>
+                <td contenteditable="true" data-field="ishHajmi"></td>
+                <td contenteditable="true" data-field="rejadanTashqariIshlar"></td>
+                <td contenteditable="true" data-field="ratingBall"></td>
+            </tr>
+        `);
+        resizePlanTextareas();
+    });
+
+    mentorshipReportForm?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+            event.preventDefault();
+        }
+    });
+    mentorshipReportForm?.addEventListener('submit', () => {
+        syncMentorshipRowsToForm();
+    });
+    mentorshipRowsBody?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && event.target.matches('[contenteditable="true"]')) {
+            event.preventDefault();
+            const cells = Array.from(mentorshipRowsBody.querySelectorAll('[contenteditable="true"]'));
+            const nextCell = cells[cells.indexOf(event.target) + 1];
+            nextCell?.focus();
+        }
+    });
+    function resizePlanTextareas() {}
+</script>
+</body>
+</html>

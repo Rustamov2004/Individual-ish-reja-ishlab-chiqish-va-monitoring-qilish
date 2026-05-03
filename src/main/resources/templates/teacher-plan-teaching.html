@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O'quv Ishlari</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="teacher-flow-shell">
+    <section class="teacher-flow-page teacher-flow-table-page">
+        <div class="teacher-flow-topbar">
+            <div>
+                <p class="teacher-flow-eyebrow">O'qituvchi oynasi</p>
+                <h1>O'quv ishlari</h1>
+            </div>
+            <a class="teacher-flow-back-link" th:href="@{/teacher/plans/create}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/></svg>
+                Orqaga
+            </a>
+        </div>
+
+        <section class="teacher-flow-table-card">
+            <form id="teachingReportForm" class="teacher-flow-table-form" th:action="@{/teacher/plans/create}" th:object="${reportForm}" method="post" enctype="multipart/form-data">
+                <div class="message error" th:if="${#fields.hasAnyErrors()}">Majburiy maydonlarni to'ldiring.</div>
+                <input id="teachingRowsPayload" type="hidden" th:field="*{teachingRowsPayload}">
+
+                <div class="teacher-flow-table-filters">
+                    <div class="teacher-flow-input">
+                        <label for="teacherName">O'qituvchi</label>
+                        <div class="teacher-flow-input-box">
+                            <input id="teacherName" type="text" th:value="${fullName}" readonly>
+                        </div>
+                    </div>
+                    <div class="teacher-flow-input">
+                        <label for="academicYear">O'quv yili</label>
+                        <div class="teacher-flow-input-box">
+                            <input id="academicYear" type="text" th:field="*{academicYear}" placeholder="2025-2026" required>
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('academicYear')}" th:errors="*{academicYear}"></p>
+                    </div>
+                    <div class="teacher-flow-input">
+                        <label for="semester">Semestr</label>
+                        <div class="teacher-flow-input-box">
+                            <select id="semester" th:field="*{semester}" required>
+                                <option value="">Tanlang</option>
+                                <option value="KUZGI">Kuzgi semestr</option>
+                                <option value="BAHORGI">Bahorgi semestr</option>
+                            </select>
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></p>
+                    </div>
+                </div>
+
+                <div class="teacher-flow-table-head">
+                    <span>01</span>
+                    <h2>O'quv ishlari hisoboti</h2>
+                </div>
+
+                <div class="teacher-custom-template" th:if="${template != null && template.renderable}" th:utext="${template.contentHtml}"></div>
+                <div class="teacher-flow-table-wrap" th:if="${template == null || !template.renderable}">
+                    <table class="teacher-flow-data-table teacher-flow-teaching-table">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>O'quv ishlari nomi, fakultet, guruh, talabalar soni</th>
+                            <th>Ma'ruza</th>
+                            <th>Amaliy</th>
+                            <th>Lab</th>
+                            <th>Maslahat</th>
+                            <th>Nazorat</th>
+                            <th>Taqriz</th>
+                            <th>Kurs ishi</th>
+                            <th>Bitiruv</th>
+                            <th>DAK</th>
+                            <th>Amaliyot</th>
+                            <th>ITI</th>
+                            <th>BMI taqriz</th>
+                            <th>Qayta topshirish</th>
+                            <th>Ball</th>
+                        </tr>
+                        </thead>
+                        <tbody id="teachingRowsBody">
+                        <tr>
+                            <td>1.</td>
+                            <td class="teaching-meta-cell">
+                                <textarea data-row-field="workName" rows="2" required></textarea>
+                            </td>
+                            <td><input type="number" min="0" data-row-field="maruza"></td>
+                            <td><input type="number" min="0" data-row-field="amaliyMashgulot"></td>
+                            <td><input type="number" min="0" data-row-field="laboratoriyaIshi"></td>
+                            <td><input type="number" min="0" data-row-field="maslahat"></td>
+                            <td><input type="number" min="0" data-row-field="nazorat"></td>
+                            <td><input type="number" min="0" data-row-field="taqrizlar"></td>
+                            <td><input type="number" min="0" data-row-field="kursIshi"></td>
+                            <td><input type="number" min="0" data-row-field="bitiruvIshi"></td>
+                            <td><input type="number" min="0" data-row-field="dakBmiRahbarligi"></td>
+                            <td><input type="number" min="0" data-row-field="amaliyot"></td>
+                            <td><input type="number" min="0" data-row-field="iti"></td>
+                            <td><input type="number" min="0" data-row-field="bmiGaTaqriz"></td>
+                            <td><input type="number" min="0" data-row-field="qaytaTopshirish"></td>
+                            <td><input type="number" min="0" data-row-field="ratingBall"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div hidden>
+                    <input id="workName" type="hidden" th:field="*{workName}">
+                    <input id="faculty" type="hidden" th:field="*{faculty}">
+                    <input id="groupName" type="hidden" th:field="*{groupName}">
+                    <input id="studentCount" type="hidden" th:field="*{studentCount}">
+                    <input id="maruza" type="hidden" th:field="*{maruza}">
+                    <input id="maruzaJami" type="hidden" th:field="*{maruzaJami}">
+                    <input id="amaliyMashgulot" type="hidden" th:field="*{amaliyMashgulot}">
+                    <input id="amaliyMashgulotJami" type="hidden" th:field="*{amaliyMashgulotJami}">
+                    <input id="laboratoriyaIshi" type="hidden" th:field="*{laboratoriyaIshi}">
+                    <input id="laboratoriyaIshiJami" type="hidden" th:field="*{laboratoriyaIshiJami}">
+                    <input id="maslahat" type="hidden" th:field="*{maslahat}">
+                    <input id="maslahatJami" type="hidden" th:field="*{maslahatJami}">
+                    <input id="nazorat" type="hidden" th:field="*{nazorat}">
+                    <input id="nazoratJami" type="hidden" th:field="*{nazoratJami}">
+                    <input id="taqrizlar" type="hidden" th:field="*{taqrizlar}">
+                    <input id="taqrizlarJami" type="hidden" th:field="*{taqrizlarJami}">
+                    <input id="kursIshi" type="hidden" th:field="*{kursIshi}">
+                    <input id="kursIshiJami" type="hidden" th:field="*{kursIshiJami}">
+                    <input id="bitiruvIshi" type="hidden" th:field="*{bitiruvIshi}">
+                    <input id="bitiruvIshiJami" type="hidden" th:field="*{bitiruvIshiJami}">
+                    <input id="dakBmiRahbarligi" type="hidden" th:field="*{dakBmiRahbarligi}">
+                    <input id="dakBmiRahbarligiJami" type="hidden" th:field="*{dakBmiRahbarligiJami}">
+                    <input id="amaliyot" type="hidden" th:field="*{amaliyot}">
+                    <input id="amaliyotJami" type="hidden" th:field="*{amaliyotJami}">
+                    <input id="iti" type="hidden" th:field="*{iti}">
+                    <input id="itiJami" type="hidden" th:field="*{itiJami}">
+                    <input id="bmiGaTaqriz" type="hidden" th:field="*{bmiGaTaqriz}">
+                    <input id="bmiGaTaqrizJami" type="hidden" th:field="*{bmiGaTaqrizJami}">
+                    <input id="qaytaTopshirish" type="hidden" th:field="*{qaytaTopshirish}">
+                    <input id="qaytaTopshirishJami" type="hidden" th:field="*{qaytaTopshirishJami}">
+                    <input id="ratingBall" type="hidden" th:field="*{ratingBall}">
+                    <input id="ratingBallJami" type="hidden" th:field="*{ratingBallJami}">
+                </div>
+
+                <div class="teacher-flow-table-actions">
+                    <button type="button" id="newTeachingRow" class="teacher-flow-secondary-button" th:if="${template == null || !template.renderable}">Yangi qator</button>
+                    <button type="submit" class="teacher-flow-primary-button">Hisobotni yuborish</button>
+                </div>
+            </form>
+        </section>
+    </section>
+</main>
+<script>
+    const teachingReportForm = document.getElementById('teachingReportForm');
+    const teachingRowsBody = document.getElementById('teachingRowsBody');
+    const teachingRowFields = ['semester', 'workName', 'faculty', 'groupName', 'studentCount', 'maruza', 'amaliyMashgulot', 'laboratoriyaIshi', 'maslahat', 'nazorat', 'taqrizlar', 'kursIshi', 'bitiruvIshi', 'dakBmiRahbarligi', 'amaliyot', 'iti', 'bmiGaTaqriz', 'qaytaTopshirish', 'ratingBall'];
+    const numberFields = ['maruza', 'amaliyMashgulot', 'laboratoriyaIshi', 'maslahat', 'nazorat', 'taqrizlar', 'kursIshi', 'bitiruvIshi', 'dakBmiRahbarligi', 'amaliyot', 'iti', 'bmiGaTaqriz', 'qaytaTopshirish', 'ratingBall'];
+
+    teachingReportForm?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+            event.preventDefault();
+        }
+    });
+
+    function resizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+
+    function bindTextareaResize(root = document) {
+        root.querySelectorAll('.teacher-flow-teaching-table textarea').forEach((textarea) => {
+            resizeTextarea(textarea);
+            textarea.addEventListener('input', () => resizeTextarea(textarea));
+        });
+    }
+
+    bindTextareaResize();
+
+    function selectedSemester() {
+        return document.getElementById('semester')?.value || '';
+    }
+
+    function readTeachingRows() {
+        const customRows = readCustomTeachingRows();
+        if (customRows.length) {
+            return customRows;
+        }
+        return Array.from(teachingRowsBody.querySelectorAll('tr')).map((row) => {
+            const data = Object.fromEntries(teachingRowFields.map((field) => [field, row.querySelector(`[data-row-field="${field}"]`)?.value.trim() || '']));
+            data.semester = selectedSemester();
+            data.faculty = data.faculty || '-';
+            data.groupName = data.groupName || '-';
+            data.studentCount = data.studentCount || '1';
+            return data;
+        }).filter((row) => teachingRowFields.some((field) => row[field] !== ''));
+    }
+
+    function prepareCustomTemplate() {
+        document.querySelectorAll('.teacher-custom-template td').forEach((cell) => {
+            cell.contentEditable = 'true';
+            cell.addEventListener('input', () => cell.dataset.edited = 'true');
+        });
+    }
+
+    function readCustomTeachingRows() {
+        return Array.from(document.querySelectorAll('.teacher-custom-template tr')).map((row) => {
+            const cells = Array.from(row.querySelectorAll('td'));
+            if (!cells.some((cell) => cell.dataset.edited === 'true')) {
+                return null;
+            }
+            const values = cells.map((cell) => cell.textContent.trim());
+            const offset = values.length > 15 ? 1 : 0;
+            const data = Object.fromEntries(teachingRowFields.map((field) => [field, '']));
+            data.semester = selectedSemester();
+            data.workName = values[offset] || '';
+            data.faculty = '-';
+            data.groupName = '-';
+            data.studentCount = '1';
+            numberFields.forEach((field, index) => data[field] = values[offset + index + 1] || '');
+            return data;
+        }).filter(Boolean);
+    }
+
+    prepareCustomTemplate();
+
+    function syncFirstTeachingRow(row) {
+        if (!row) {
+            return;
+        }
+        document.getElementById('workName').value = row.workName || '';
+        document.getElementById('faculty').value = row.faculty || '';
+        document.getElementById('groupName').value = row.groupName || '';
+        document.getElementById('studentCount').value = row.studentCount || '';
+        numberFields.forEach((field) => {
+            const input = document.getElementById(field);
+            const jamiInput = document.getElementById(`${field}Jami`);
+            if (input) {
+                input.value = row[field] || '';
+            }
+            if (jamiInput) {
+                jamiInput.value = row[field] || '';
+            }
+        });
+    }
+
+    document.getElementById('newTeachingRow')?.addEventListener('click', () => {
+        const rowNumber = teachingRowsBody.querySelectorAll('tr').length + 1;
+        teachingRowsBody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td>${rowNumber}.</td>
+                <td class="teaching-meta-cell">
+                    <textarea data-row-field="workName" rows="2" required></textarea>
+                </td>
+                <td><input type="number" min="0" data-row-field="maruza"></td>
+                <td><input type="number" min="0" data-row-field="amaliyMashgulot"></td>
+                <td><input type="number" min="0" data-row-field="laboratoriyaIshi"></td>
+                <td><input type="number" min="0" data-row-field="maslahat"></td>
+                <td><input type="number" min="0" data-row-field="nazorat"></td>
+                <td><input type="number" min="0" data-row-field="taqrizlar"></td>
+                <td><input type="number" min="0" data-row-field="kursIshi"></td>
+                <td><input type="number" min="0" data-row-field="bitiruvIshi"></td>
+                <td><input type="number" min="0" data-row-field="dakBmiRahbarligi"></td>
+                <td><input type="number" min="0" data-row-field="amaliyot"></td>
+                <td><input type="number" min="0" data-row-field="iti"></td>
+                <td><input type="number" min="0" data-row-field="bmiGaTaqriz"></td>
+                <td><input type="number" min="0" data-row-field="qaytaTopshirish"></td>
+                <td><input type="number" min="0" data-row-field="ratingBall"></td>
+            </tr>
+        `);
+        bindTextareaResize(teachingRowsBody.lastElementChild);
+    });
+
+    teachingReportForm?.addEventListener('submit', () => {
+        const rows = readTeachingRows();
+        document.getElementById('teachingRowsPayload').value = rows
+            .map((row) => teachingRowFields.map((field) => encodeURIComponent(row[field] || '')).join('|'))
+            .join('\n');
+        syncFirstTeachingRow(rows[0]);
+    });
+
+    document.querySelectorAll('[data-sync-target]').forEach((sourceInput) => {
+        const targetId = sourceInput.getAttribute('data-sync-target');
+        const targetInput = document.getElementById(targetId);
+        if (!targetInput) {
+            return;
+        }
+
+        const syncValue = () => {
+            targetInput.value = sourceInput.value;
+        };
+
+        sourceInput.addEventListener('change', syncValue);
+        sourceInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                syncValue();
+            }
+        });
+    });
+</script>
+</body>
+</html>

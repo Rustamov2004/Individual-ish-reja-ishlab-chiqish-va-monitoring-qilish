@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="reportTable(reports, teacherId, sectionKey)">
+    <div class="table-wrap" th:if="${!#lists.isEmpty(reports)}">
+        <table>
+            <thead>
+            <tr>
+                <th>Semestr</th>
+                <th>Ish nomi</th>
+                <th>Individual ish reja jadvali</th>
+                <th>Hisobot jadvali</th>
+                <th>Hisobot uchun sharh</th>
+                <th>Amal</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="report : ${reports}" th:classappend="${report.reportResponse != null && #strings.contains(report.reportResponse, 'tasdiq')} ? ' status-approved' : (${report.reportResponse != null && #strings.contains(report.reportResponse, 'rad')} ? ' status-rejected' : '')">
+                <td th:text="${report.semester}">KUZGI</td>
+                <td th:text="${report.workName}">Fan</td>
+                <td><a class="mini-link" th:href="@{/reports/{id}/view(id=${report.id}, files=false)}" target="_blank" rel="noopener">Ko'rish</a></td>
+                <td><a class="mini-link" th:href="@{/reports/{id}/view(id=${report.id}, files=true)}" target="_blank" rel="noopener">Ko'rish</a></td>
+                <td th:text="${report.reportResponse}">Hisobot javobi</td>
+                <td class="action-cell">
+                    <form class="inline-form" th:action="@{/plans/reports/{id}/delete(id=${report.id}, teacherId=${teacherId}, sectionKey=${sectionKey})}" method="post" onsubmit="return confirm('Hisobot butunlay ochirilsinmi?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="icon-link danger" type="submit" title="O'chirish" aria-label="Hisobotni o'chirish">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm-3 6h12l-.8 12H6.8L6 9zm4 2v8h2v-8h-2zm4 0v8h2v-8h-2z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p th:if="${#lists.isEmpty(reports)}" class="muted-text">Bu bo'limda yakunlangan hisobot yo'q.</p>
+</div>
+</body>
+</html>

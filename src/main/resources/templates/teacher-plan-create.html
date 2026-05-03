@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reja Bo'limlari</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="teacher-flow-shell">
+    <section class="teacher-flow-page">
+        <div class="teacher-flow-topbar">
+            <div>
+                <p class="teacher-flow-eyebrow">O'qituvchi oynasi</p>
+                <h1>Individual ish reja bo'limlari</h1>
+            </div>
+            <a class="teacher-flow-back-link" th:href="@{/teacher-panel}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/></svg>
+                Orqaga
+            </a>
+        </div>
+
+        <section class="teacher-flow-section-grid">
+            <a class="teacher-flow-section-card" th:href="@{/teacher/plans/teaching}">
+                <span>01</span>
+                <h2>O'QUV ISHLARI</h2>
+            </a>
+            <a class="teacher-flow-section-card" th:href="@{/teacher/plans/methodical}">
+                <span>02</span>
+                <h2>ILMIY-USLUBIY ISHLAR</h2>
+            </a>
+            <a class="teacher-flow-section-card" th:href="@{/teacher/plans/research}">
+                <span>03</span>
+                <h2>ILMIY-TADQIQOT ISHLARI</h2>
+            </a>
+            <a class="teacher-flow-section-card" th:href="@{/teacher/plans/mentorship}">
+                <span>04</span>
+                <h2>USTOZ-SHOGIRD ISHLARI</h2>
+            </a>
+        </section>
+    </section>
+</main>
+</body>
+</html>

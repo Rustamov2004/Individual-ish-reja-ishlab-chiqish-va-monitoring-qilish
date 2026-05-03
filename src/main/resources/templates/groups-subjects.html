@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guruhlar va Fanlar</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<button type="button" class="back-button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/'; }" aria-label="Orqaga qaytish">&larr; Orqaga</button>
+<main class="dashboard-shell">
+    <section class="dashboard-page">
+        <div class="page-topbar">
+            <div>
+                <p class="eyebrow">Kafedra mudiri paneli</p>
+                <h1>Guruhlar va fanlar</h1>
+            </div>
+            <a class="ghost-link" th:href="@{/}">Orqaga</a>
+        </div>
+
+        <section class="two-column-fields">
+            <article class="content-card">
+                <h2>Yangi guruh qo'shish</h2>
+                <form class="grid-form compact-form" th:action="@{/groups-subjects/groups}" method="post">
+                    <input type="text" name="name" placeholder="Guruh nomi" required>
+                    <button type="submit">OK</button>
+                </form>
+                <div class="table-wrap compact-table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Guruh</th>
+                            <th>Amal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="group : ${groups}">
+                            <td>
+                                <form th:id="|groupEdit${group.id}|" th:action="@{/groups-subjects/groups/{id}/edit(id=${group.id})}" method="post">
+                                    <input class="inline-edit-input" type="text" name="name" th:value="${group.name}" readonly>
+                                </form>
+                            </td>
+                            <td class="action-cell">
+                                <button class="icon-link" type="button" title="Tahrirlash" th:onclick="|enableInlineEdit('groupEdit${group.id}')|">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4.2L19.5 8.7l-4.2-4.2L4 15.8V20zM16.7 3.1l4.2 4.2 1.3-1.3c.7-.7.7-1.9 0-2.6l-1.6-1.6c-.7-.7-1.9-.7-2.6 0l-1.3 1.3z"/></svg>
+                                </button>
+                                <button class="icon-link success" type="submit" th:form="|groupEdit${group.id}|" title="Saqlash">OK</button>
+                                <form class="inline-form" th:action="@{/groups-subjects/groups/{id}/delete(id=${group.id})}" method="post" onsubmit="return confirm('Guruh ochirilsinmi?');">
+                                    <button class="icon-link danger" type="submit" title="O'chirish">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm-3 6h12l-.8 12H6.8L6 9zm4 2v8h2v-8h-2zm4 0v8h2v-8h-2z"/></svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(groups)}">
+                            <td colspan="2">Hozircha guruh yaratilmagan.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="content-card">
+                <h2>Yangi fan qo'shish</h2>
+                <form class="grid-form compact-form" th:action="@{/groups-subjects/subjects}" method="post">
+                    <input type="text" name="name" placeholder="Fan nomi" required>
+                    <button type="submit">OK</button>
+                </form>
+                <div class="table-wrap compact-table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Fan</th>
+                            <th>Amal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="subject : ${subjects}">
+                            <td>
+                                <form th:id="|subjectEdit${subject.id}|" th:action="@{/groups-subjects/subjects/{id}/edit(id=${subject.id})}" method="post">
+                                    <input class="inline-edit-input" type="text" name="name" th:value="${subject.name}" readonly>
+                                </form>
+                            </td>
+                            <td class="action-cell">
+                                <button class="icon-link" type="button" title="Tahrirlash" th:onclick="|enableInlineEdit('subjectEdit${subject.id}')|">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4.2L19.5 8.7l-4.2-4.2L4 15.8V20zM16.7 3.1l4.2 4.2 1.3-1.3c.7-.7.7-1.9 0-2.6l-1.6-1.6c-.7-.7-1.9-.7-2.6 0l-1.3 1.3z"/></svg>
+                                </button>
+                                <button class="icon-link success" type="submit" th:form="|subjectEdit${subject.id}|" title="Saqlash">OK</button>
+                                <form class="inline-form" th:action="@{/groups-subjects/subjects/{id}/delete(id=${subject.id})}" method="post" onsubmit="return confirm('Fan ochirilsinmi?');">
+                                    <button class="icon-link danger" type="submit" title="O'chirish">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm-3 6h12l-.8 12H6.8L6 9zm4 2v8h2v-8h-2zm4 0v8h2v-8h-2z"/></svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(subjects)}">
+                            <td colspan="2">Hozircha fan yaratilmagan.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </section>
+</main>
+<script>
+    function enableInlineEdit(formId) {
+        const input = document.querySelector(`#${formId} input`);
+        if (input) {
+            input.removeAttribute('readonly');
+            input.focus();
+            input.select();
+        }
+    }
+</script>
+</body>
+</html>
+

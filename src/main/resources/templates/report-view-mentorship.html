@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ustoz-shogird hisobot</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="refined-report-shell">
+    <div class="refined-report-actions">
+        <a class="refined-back-link" th:href="@{/monitoring}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/></svg>
+            <span>Monitoring sahifasiga qaytish</span>
+        </a>
+        <div class="refined-action-buttons">
+            <a class="refined-light-button" th:href="@{/reports/{id}/file(id=${report.id})}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10l3.5-3.5 1.4 1.4-5.9 5.9-5.9-5.9 1.4-1.4L11 13V3zM5 19h14v2H5v-2z"/></svg>
+                <span>Fayl yuklash</span>
+            </a>
+            <button type="button" class="refined-print-button" onclick="window.print()">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v5H7V3zm-2 7h14a3 3 0 0 1 3 3v5h-4v3H6v-3H2v-5a3 3 0 0 1 3-3zm3 7v2h8v-5H8v3z"/></svg>
+                <span>Chop etish</span>
+            </button>
+        </div>
+    </div>
+
+    <section class="refined-report-card">
+        <b class="refined-watermark" aria-hidden="true">4</b>
+        <header class="refined-report-head">
+            <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16v18H4V3zm2 2v14h12V5H6zm2 3h8v2H8V8zm0 4h8v2H8v-2z"/></svg>Hisobot ko'rinishi</p>
+            <h1>4. Ustoz-shogird ishlari</h1>
+            <div class="refined-meta">
+                <span>O'qituvchi: <strong th:text="${report.teacher.fullName == null ? report.teacher.username : report.teacher.fullName}">O'qituvchi</strong></span>
+                <span>Semestr: <strong th:text="${report.semester}">KUZGI</strong></span>
+            </div>
+        </header>
+
+        <div class="refined-table-area">
+            <div class="refined-table-frame">
+                <table class="refined-report-table">
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Bajariladigan ishlar</th>
+                        <th>Muddat</th>
+                        <th>O'tkazish joyi</th>
+                        <th>Ish hajmi</th>
+                        <th>Rejadan tashqari</th>
+                        <th class="score-head">Reyting ball</th>
+                        <th th:if="${!#lists.isEmpty(amaldaFiles)}">Hisobot fayli</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row, iter : ${mentorshipRows}">
+                        <td th:text="${iter.count + '.'}">1.</td>
+                        <td th:text="${row.bajariladiganIshlar}">-</td>
+                        <td th:text="${row.muddat}">-</td>
+                        <td th:text="${row.otkazishJoyi}">-</td>
+                        <td th:text="${row.ishHajmi}">-</td>
+                        <td th:text="${row.rejadanTashqariIshlar}">-</td>
+                        <td class="score-cell" th:text="${row.ratingBall}">-</td>
+                        <td th:if="${!#lists.isEmpty(amaldaFiles)}" th:with="file=${amaldaFileMap['mentorshipHisobot_' + iter.index]}">
+                            <a th:if="${file != null}" class="mini-link" th:href="@{/reports/{id}/amalda-files/{fileIndex}(id=${report.id}, fileIndex=${file.index})}" th:text="${file.fileName}">Fayl</a>
+                            <span th:if="${file == null}">-</span>
+                        </td>
+                    </tr>
+                    <tr class="refined-total-row">
+                        <td colspan="2"><span class="total-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4h3l-3 5a6 6 0 0 1-4 2.8V18h3v2H8v-2h3v-3.2A6 6 0 0 1 7 12L4 7h3V3z"/></svg>Jami to'plangan:</span></td>
+                        <td th:text="${mentorshipTotals['muddat']}">0</td>
+                        <td th:text="${mentorshipTotals['otkazishJoyi']}">0</td>
+                        <td th:text="${mentorshipTotals['ishHajmi']}">0</td>
+                        <td th:text="${mentorshipTotals['rejadanTashqariIshlar']}">0</td>
+                        <td class="score-total" th:text="${mentorshipTotals['ratingBall']}">0</td>
+                        <td th:if="${!#lists.isEmpty(amaldaFiles)}" th:text="${#lists.size(amaldaFiles)}">0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="refined-brand">E-Kafedra Monitoring Tizimi orqali avtomatik shakllantirildi</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

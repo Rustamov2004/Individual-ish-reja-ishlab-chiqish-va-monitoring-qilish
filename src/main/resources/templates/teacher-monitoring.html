@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Tahlili</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="teacher-flow-shell">
+    <section class="teacher-flow-page">
+        <div class="teacher-flow-topbar">
+            <div>
+                <p class="teacher-flow-eyebrow">O'qituvchi oynasi</p>
+                <h1>Monitoring tahlili</h1>
+            </div>
+            <a class="teacher-flow-back-link" th:href="@{/teacher-panel}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 8.5 12l7 7-1.5 1.5L5.5 12 14 3.5 15.5 5z"/></svg>
+                Orqaga
+            </a>
+        </div>
+
+        <section class="teacher-progress-panel teacher-progress-panel-page">
+            <div class="teacher-progress-grid">
+                <a class="teacher-progress-card" th:each="item : ${sectionProgress}" th:href="@{/teacher/monitoring/{sectionKey}(sectionKey=${item.sectionKey})}">
+                    <div class="teacher-progress-card-head">
+                        <strong th:text="${item.sectionTitle}">O'quv ishlari</strong>
+                        <span th:text="${item.progress} + '%'">25%</span>
+                    </div>
+                    <div class="teacher-progress-bar">
+                        <span th:style="'width:' + ${item.progress} + '%'"></span>
+                    </div>
+                    <em th:text="${item.status}">Yuborilgan</em>
+                    <p th:text="${item.note}">Mudir ko'rib chiqishi kutilmoqda</p>
+                </a>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

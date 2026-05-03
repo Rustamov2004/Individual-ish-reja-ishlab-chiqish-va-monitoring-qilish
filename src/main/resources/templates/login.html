@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uz" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizimga kirish</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="login-page">
+    <div class="login-grid-bg" aria-hidden="true"></div>
+    <div class="login-glow login-glow-top" aria-hidden="true"></div>
+    <div class="login-glow login-glow-bottom" aria-hidden="true"></div>
+
+    <section class="login-card" aria-labelledby="loginTitle">
+        <div class="login-heading">
+            <p>Xush kelibsiz</p>
+            <h1 id="loginTitle">Tizimga kirish</h1>
+        </div>
+
+        <div th:if="${param.registered}" class="login-alert success">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 13.8-3.6-3.6 1.4-1.4 2.2 2.2 4.8-4.8 1.4 1.4-6.2 6.2z"/>
+            </svg>
+            <span>Ro'yxatdan o'tish muvaffaqiyatli yakunlandi.</span>
+        </div>
+        <div th:if="${param.profileUpdated}" class="login-alert success">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 13.8-3.6-3.6 1.4-1.4 2.2 2.2 4.8-4.8 1.4 1.4-6.2 6.2z"/>
+            </svg>
+            <span>Login yoki parol yangilandi. Yangi ma'lumotlar bilan qayta kiring.</span>
+        </div>
+        <div th:if="${param.error}" class="login-alert error">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M11 7h2v7h-2V7zm0 9h2v2h-2v-2zm1-14a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/>
+            </svg>
+            <span>Login yoki parol noto'g'ri.</span>
+        </div>
+        <div th:if="${param.logout}" class="login-alert success">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 13.8-3.6-3.6 1.4-1.4 2.2 2.2 4.8-4.8 1.4 1.4-6.2 6.2z"/>
+            </svg>
+            <span>Siz tizimdan muvaffaqiyatli chiqdingiz.</span>
+        </div>
+
+        <form th:action="@{/login}" method="post" class="login-form">
+            <div class="login-field">
+                <label for="username">Login</label>
+                <div class="login-input-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/>
+                    </svg>
+                    <input id="username" type="text" name="username" placeholder="Loginni kiriting" autocomplete="username" required>
+                </div>
+            </div>
+
+            <div class="login-field">
+                <label for="password">Parol</label>
+                <div class="login-input-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M17 9h-1V7A4 4 0 0 0 8 7v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zM10 7a2 2 0 0 1 4 0v2h-4V7z"/>
+                    </svg>
+                    <input id="password" type="password" name="password" placeholder="Parolni kiriting" autocomplete="current-password" required>
+                    <button type="button" class="login-password-toggle" aria-label="Parolni ko'rsatish" title="Parolni ko'rsatish">
+                        <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 5c5 0 9 4.5 10 7-1 2.5-5 7-10 7S3 14.5 2 12c1-2.5 5-7 10-7zm0 2c-3.4 0-6.3 2.7-7.7 5 1.4 2.3 4.3 5 7.7 5s6.3-2.7 7.7-5C18.3 9.7 15.4 7 12 7zm0 2.5A2.5 2.5 0 1 1 9.5 12 2.5 2.5 0 0 1 12 9.5z"/>
+                        </svg>
+                        <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m3.3 2 18.7 18.7-1.3 1.3-3.1-3.1A10.5 10.5 0 0 1 12 21C7 21 3 16.5 2 14c.5-1.3 1.9-3.1 3.8-4.5L2 5.3 3.3 2zm7 7 1.5 1.5A2.5 2.5 0 0 1 15.5 14l1 1A4.5 4.5 0 0 0 10.3 9zM12 7c5 0 9 4.5 10 7-.3.8-1.1 1.9-2.2 3L17 14.2V14a5 5 0 0 0-5-5h-.2L9.7 6.9A10.7 10.7 0 0 1 12 7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 17v-3H3v-4h7V7l5 5-5 5zm2 4v-2h7V5h-7V3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7z"/>
+                </svg>
+                Kirish
+            </button>
+        </form>
+
+        <p class="login-switch">Akkauntingiz yo'qmi? <a th:href="@{/signup}">Sign Up</a></p>
+    </section>
+
+    <p class="login-footer">© 2024 Kafedra Monitoring Tizimi v1.0</p>
+</main>
+<script>
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.querySelector('.login-password-toggle');
+    passwordToggle?.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        passwordToggle.classList.toggle('is-visible', isPassword);
+        passwordToggle.setAttribute('aria-label', isPassword ? 'Parolni yashirish' : 'Parolni ko\'rsatish');
+    });
+</script>
+</body>
+</html>
