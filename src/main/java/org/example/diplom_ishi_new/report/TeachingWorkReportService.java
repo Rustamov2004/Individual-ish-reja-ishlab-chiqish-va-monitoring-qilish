@@ -946,6 +946,18 @@ public class TeachingWorkReportService {
         return total / summaries.size();
     }
 
+    public List<SectionMonitoringChartSummary> getTeacherMonitoringChartSummaries(User teacher) {
+        List<TeachingWorkReport> reports = getTeacherReports(teacher);
+        List<SectionMonitoringChartSummary> summaries = new ArrayList<>();
+        for (String section : PROGRESS_SECTIONS) {
+            List<TeachingWorkReport> sectionReports = reports.stream()
+                    .filter(item -> section.equals(item.getSection()))
+                    .toList();
+            summaries.add(buildSectionMonitoringChart(section, sectionReports));
+        }
+        return summaries;
+    }
+
     private SectionProgressSummary buildSectionProgress(String section, TeachingWorkReport report) {
         String sectionKey = switch (section) {
             case "O'quv ishlari" -> "teaching";
@@ -964,6 +976,44 @@ public class TeachingWorkReportService {
                 progressStatus(report),
                 progressNote(report)
         );
+    }
+
+    private SectionMonitoringChartSummary buildSectionMonitoringChart(String section, List<TeachingWorkReport> reports) {
+        String sectionKey = switch (section) {
+            case "O'quv ishlari" -> "teaching";
+            case "Ilmiy-uslubiy ishlar" -> "methodical";
+            case "Ilmiy-tadqiqot ishlari" -> "research";
+            case "Ustoz-shogird ishlari" -> "mentorship";
+            default -> "teaching";
+        };
+        int total = reports.size();
+        int submittedCount = (int) reports.stream()
+                .filter(report -> report.getStatus() == ReportStatus.YUBORILGAN)
+                .count();
+        int approvedCount = (int) reports.stream()
+                .filter(this::isApproved)
+                .count();
+        int rejectedCount = (int) reports.stream()
+                .filter(report -> containsRad(report.getHeadResponse()))
+                .count();
+        return new SectionMonitoringChartSummary(
+                sectionKey,
+                section,
+                total,
+                submittedCount,
+                approvedCount,
+                rejectedCount,
+                percentOf(submittedCount, total),
+                percentOf(approvedCount, total),
+                percentOf(rejectedCount, total)
+        );
+    }
+
+    private int percentOf(int value, int total) {
+        if (total <= 0) {
+            return 0;
+        }
+        return (int) Math.round((value * 100.0) / total);
     }
 
     private boolean shouldKeepVisible(TeachingWorkReport report) {
@@ -1104,6 +1154,48 @@ public class TeachingWorkReportService {
         public int getProgress() { return progress; }
         public String getStatus() { return status; }
         public String getNote() { return note; }
+    }
+
+    public static class SectionMonitoringChartSummary {
+        private final String sectionKey;
+        private final String sectionTitle;
+        private final int total;
+        private final int submittedCount;
+        private final int approvedCount;
+        private final int rejectedCount;
+        private final int submittedPercent;
+        private final int approvedPercent;
+        private final int rejectedPercent;
+
+        public SectionMonitoringChartSummary(String sectionKey,
+                                             String sectionTitle,
+                                             int total,
+                                             int submittedCount,
+                                             int approvedCount,
+                                             int rejectedCount,
+                                             int submittedPercent,
+                                             int approvedPercent,
+                                             int rejectedPercent) {
+            this.sectionKey = sectionKey;
+            this.sectionTitle = sectionTitle;
+            this.total = total;
+            this.submittedCount = submittedCount;
+            this.approvedCount = approvedCount;
+            this.rejectedCount = rejectedCount;
+            this.submittedPercent = submittedPercent;
+            this.approvedPercent = approvedPercent;
+            this.rejectedPercent = rejectedPercent;
+        }
+
+        public String getSectionKey() { return sectionKey; }
+        public String getSectionTitle() { return sectionTitle; }
+        public int getTotal() { return total; }
+        public int getSubmittedCount() { return submittedCount; }
+        public int getApprovedCount() { return approvedCount; }
+        public int getRejectedCount() { return rejectedCount; }
+        public int getSubmittedPercent() { return submittedPercent; }
+        public int getApprovedPercent() { return approvedPercent; }
+        public int getRejectedPercent() { return rejectedPercent; }
     }
 
     private void deleteStoredFiles(TeachingWorkReport report) {

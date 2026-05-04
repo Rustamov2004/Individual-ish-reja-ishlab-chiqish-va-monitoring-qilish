@@ -4722,7 +4722,7 @@ tr.status-rejected td {
     min-height: 52px;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 13px 16px 13px 46px;
+    padding: 13px 50px 13px 46px;
     background: #f8fafc;
     color: #334155;
     font: inherit;
@@ -4739,6 +4739,13 @@ tr.status-rejected td {
     border-color: #3b82f6;
     background: #fff;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.edit-password-toggle {
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
 }
 
 .edit-form-actions {
@@ -5880,23 +5887,28 @@ tr.status-rejected td {
 }
 
 .enterprise-dashboard {
+    position: relative;
     display: flex;
     min-height: 100vh;
     background: #f4f7fa;
     color: #0f172a;
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow-x: hidden;
 }
 
 .enterprise-sidebar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    z-index: 90;
     display: flex;
-    width: 288px;
+    width: min(288px, calc(100vw - 28px));
     height: 100vh;
-    flex: 0 0 288px;
     flex-direction: column;
     overflow: hidden;
     background: #0f172a;
+    transform: translateX(-110%);
+    transition: transform 0.26s ease;
 }
 
 .enterprise-brand {
@@ -5939,6 +5951,41 @@ tr.status-rejected td {
     font-size: 1.25rem;
     font-weight: 950;
     letter-spacing: -0.03em;
+}
+
+.enterprise-sidebar-close {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    box-shadow: none;
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.enterprise-sidebar-close:hover {
+    background: rgba(255, 255, 255, 0.18);
+    filter: none;
+}
+
+.enterprise-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: rgba(15, 23, 42, 0.34);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.24s ease;
+    box-shadow: none;
 }
 
 .enterprise-nav {
@@ -6007,6 +6054,7 @@ tr.status-rejected td {
 .enterprise-main {
     min-width: 0;
     flex: 1;
+    width: 100%;
     overflow-x: hidden;
 }
 
@@ -6023,6 +6071,45 @@ tr.status-rejected td {
     border-bottom: 1px solid #e2e8f0;
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(18px);
+}
+
+.enterprise-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+}
+
+.enterprise-menu-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #dbe4f0;
+    border-radius: 16px;
+    background: #fff;
+    color: #1e3a8a;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.enterprise-menu-toggle:hover {
+    background: #eff6ff;
+    filter: none;
+}
+
+.enterprise-menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2.5px;
+    border-radius: 999px;
+    background: currentColor;
 }
 
 .enterprise-search {
@@ -6179,6 +6266,15 @@ tr.status-rejected td {
     display: grid;
     gap: 38px;
     padding: 32px;
+}
+
+.enterprise-dashboard.sidebar-open .enterprise-sidebar {
+    transform: translateX(0);
+}
+
+.enterprise-dashboard.sidebar-open .enterprise-sidebar-overlay {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .enterprise-stat-grid {
@@ -6585,51 +6681,21 @@ tr.status-rejected td {
 }
 
 @media (max-width: 900px) {
-    .enterprise-sidebar {
-        width: 80px;
-        flex-basis: 80px;
-    }
-
-    .enterprise-brand strong,
-    .enterprise-nav span,
-    .enterprise-logout-form span {
-        display: none;
-    }
-
-    .enterprise-nav a,
-    .enterprise-logout-form button {
-        justify-content: center;
-        padding: 0;
+    .enterprise-search {
+        width: 100%;
     }
 }
 
 @media (max-width: 700px) {
-    .enterprise-dashboard {
-        display: block;
-    }
-
-    .enterprise-sidebar {
-        position: static;
-        width: auto;
-        height: auto;
-        flex-basis: auto;
-    }
-
-    .enterprise-brand strong,
-    .enterprise-nav span,
-    .enterprise-logout-form span {
-        display: inline;
-    }
-
-    .enterprise-nav {
-        padding-top: 8px;
-    }
-
     .enterprise-topbar {
         height: auto;
         align-items: stretch;
         flex-direction: column;
         padding: 16px;
+    }
+
+    .enterprise-topbar-left {
+        width: 100%;
     }
 
     .enterprise-profile-area {
@@ -9241,6 +9307,153 @@ tr.status-rejected td {
     margin-top: 8px;
 }
 
+.teacher-monitoring-dashboard {
+    display: grid;
+    gap: 28px;
+}
+
+.teacher-monitoring-block {
+    padding: 34px;
+    border: 1px solid #dbe7f7;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 24px 60px rgba(37, 99, 235, 0.08);
+}
+
+.teacher-monitoring-block-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.teacher-monitoring-block-head h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.55rem;
+    font-weight: 950;
+}
+
+.teacher-monitoring-block-head p {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-weight: 650;
+}
+
+.teacher-monitoring-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.teacher-monitoring-chart-card {
+    display: grid;
+    gap: 18px;
+    padding: 26px;
+    border: 1px solid #dbe7f7;
+    border-radius: 30px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+.teacher-monitoring-chart-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.teacher-monitoring-chart-head strong {
+    color: #1e293b;
+    font-size: 1.12rem;
+    font-weight: 950;
+    line-height: 1.35;
+}
+
+.teacher-monitoring-chart-head span {
+    min-width: 68px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #2563eb;
+    text-align: center;
+    font-size: 0.86rem;
+    font-weight: 900;
+}
+
+.teacher-monitoring-chart-bar {
+    display: flex;
+    width: 100%;
+    height: 14px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e8effb;
+}
+
+.teacher-monitoring-chart-bar span {
+    display: block;
+    height: 100%;
+}
+
+.teacher-monitoring-chart-bar .submitted {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.teacher-monitoring-chart-bar .approved {
+    background: linear-gradient(135deg, #34d399, #059669);
+}
+
+.teacher-monitoring-chart-bar .rejected {
+    background: linear-gradient(135deg, #fb7185, #e11d48);
+}
+
+.teacher-monitoring-chart-legend {
+    display: grid;
+    gap: 12px;
+}
+
+.teacher-monitoring-legend-item {
+    display: grid;
+    grid-template-columns: 14px minmax(0, auto) 1fr;
+    align-items: center;
+    gap: 12px;
+    color: #475569;
+}
+
+.teacher-monitoring-legend-item i {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+}
+
+.teacher-monitoring-legend-item i.submitted {
+    background: #3b82f6;
+}
+
+.teacher-monitoring-legend-item i.approved {
+    background: #059669;
+}
+
+.teacher-monitoring-legend-item i.rejected {
+    background: #e11d48;
+}
+
+.teacher-monitoring-legend-item b {
+    color: #1e293b;
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.teacher-monitoring-legend-item span {
+    color: #64748b;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: right;
+}
+
 .teacher-progress-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -9330,24 +9543,37 @@ tr.status-rejected td {
 }
 
 @media (max-width: 980px) {
+    .teacher-monitoring-chart-grid,
     .teacher-progress-grid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 720px) {
+    .teacher-monitoring-block,
     .teacher-progress-panel {
         padding: 24px;
         border-radius: 30px;
     }
 
+    .teacher-monitoring-chart-card,
     .teacher-progress-card {
         padding: 20px;
         border-radius: 24px;
     }
 
+    .teacher-monitoring-chart-head,
     .teacher-progress-card-head {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .teacher-monitoring-legend-item {
+        grid-template-columns: 14px 1fr;
+    }
+
+    .teacher-monitoring-legend-item span {
+        grid-column: 2;
+        text-align: left;
     }
 }

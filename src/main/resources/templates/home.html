@@ -7,13 +7,15 @@
     <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 <body>
-<main class="enterprise-dashboard">
-    <aside class="enterprise-sidebar">
+<main class="enterprise-dashboard" id="enterpriseDashboard">
+    <button type="button" class="enterprise-sidebar-overlay" id="closeEnterpriseSidebarOverlay" aria-label="Menyuni yopish"></button>
+    <aside class="enterprise-sidebar" id="enterpriseSidebar">
         <div class="enterprise-brand">
             <span>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1 14-4-4 1.4-1.4 2.6 2.6 5.6-5.6L18 9l-7 7z"/></svg>
             </span>
             <strong>PRO-ACADEMY</strong>
+            <button type="button" class="enterprise-sidebar-close" id="closeEnterpriseSidebar" aria-label="Menyuni yopish">x</button>
         </div>
 
         <nav class="enterprise-nav">
@@ -49,9 +51,16 @@
 
     <section class="enterprise-main">
         <header class="enterprise-topbar">
-            <div class="enterprise-search">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-5.7-5.7a7 7 0 1 0-1.4 1.4L20 21l1-1zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"/></svg>
-                <input type="text" placeholder="O'qituvchi yoki reja qidirish...">
+            <div class="enterprise-topbar-left">
+                <button type="button" class="enterprise-menu-toggle" id="openEnterpriseSidebar" aria-label="Menyuni ochish">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="enterprise-search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-5.7-5.7a7 7 0 1 0-1.4 1.4L20 21l1-1zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"/></svg>
+                    <input type="text" placeholder="O'qituvchi yoki reja qidirish...">
+                </div>
             </div>
 
             <div class="enterprise-profile-area">
@@ -183,5 +192,25 @@
         </div>
     </section>
 </main>
+<script>
+    (() => {
+        const dashboard = document.getElementById('enterpriseDashboard');
+        const sidebar = document.getElementById('enterpriseSidebar');
+        const openButton = document.getElementById('openEnterpriseSidebar');
+        const closeButton = document.getElementById('closeEnterpriseSidebar');
+        const overlay = document.getElementById('closeEnterpriseSidebarOverlay');
+
+        if (!dashboard || !sidebar || !openButton || !closeButton || !overlay) {
+            return;
+        }
+
+        const openSidebar = () => dashboard.classList.add('sidebar-open');
+        const closeSidebar = () => dashboard.classList.remove('sidebar-open');
+
+        openButton.addEventListener('click', openSidebar);
+        closeButton.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    })();
+</script>
 </body>
 </html>

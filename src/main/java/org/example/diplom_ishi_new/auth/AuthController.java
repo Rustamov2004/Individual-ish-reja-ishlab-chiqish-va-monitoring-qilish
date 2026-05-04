@@ -514,6 +514,7 @@ public class AuthController {
     public String teacherMonitoring(Authentication authentication, Model model) {
         User user = userService.findByUsername(authentication.getName());
         addTeacherCommonAttributes(model, user);
+        model.addAttribute("monitoringCharts", teachingWorkReportService.getTeacherMonitoringChartSummaries(user));
         return "teacher-monitoring";
     }
 

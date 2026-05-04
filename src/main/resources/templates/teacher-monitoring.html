@@ -20,19 +20,70 @@
             </a>
         </div>
 
-        <section class="teacher-progress-panel teacher-progress-panel-page">
-            <div class="teacher-progress-grid">
-                <a class="teacher-progress-card" th:each="item : ${sectionProgress}" th:href="@{/teacher/monitoring/{sectionKey}(sectionKey=${item.sectionKey})}">
-                    <div class="teacher-progress-card-head">
-                        <strong th:text="${item.sectionTitle}">O'quv ishlari</strong>
-                        <span th:text="${item.progress} + '%'">25%</span>
+        <section class="teacher-monitoring-dashboard">
+            <div class="teacher-monitoring-block">
+                <div class="teacher-monitoring-block-head">
+                    <div>
+                        <h2>Bo'limlar bo'yicha diagramma</h2>
+                        <p>Har bir bo'limda nechta reja yuborilgan, tasdiqlangan va rad qilinganligi foizlarda ko'rsatiladi</p>
                     </div>
-                    <div class="teacher-progress-bar">
-                        <span th:style="'width:' + ${item.progress} + '%'"></span>
+                </div>
+
+                <div class="teacher-monitoring-chart-grid">
+                    <article class="teacher-monitoring-chart-card" th:each="chart : ${monitoringCharts}">
+                        <div class="teacher-monitoring-chart-head">
+                            <strong th:text="${chart.sectionTitle}">O'quv ishlari</strong>
+                            <span th:text="${chart.total} + ' ta'">0 ta</span>
+                        </div>
+
+                        <div class="teacher-monitoring-chart-bar">
+                            <span class="submitted" th:style="'width:' + ${chart.submittedPercent} + '%'"></span>
+                            <span class="approved" th:style="'width:' + ${chart.approvedPercent} + '%'"></span>
+                            <span class="rejected" th:style="'width:' + ${chart.rejectedPercent} + '%'"></span>
+                        </div>
+
+                        <div class="teacher-monitoring-chart-legend">
+                            <div class="teacher-monitoring-legend-item">
+                                <i class="submitted"></i>
+                                <b>Yuborilgan</b>
+                                <span th:text="${chart.submittedCount} + ' ta / ' + ${chart.submittedPercent} + '%'">0 ta / 0%</span>
+                            </div>
+                            <div class="teacher-monitoring-legend-item">
+                                <i class="approved"></i>
+                                <b>Tasdiqlangan</b>
+                                <span th:text="${chart.approvedCount} + ' ta / ' + ${chart.approvedPercent} + '%'">0 ta / 0%</span>
+                            </div>
+                            <div class="teacher-monitoring-legend-item">
+                                <i class="rejected"></i>
+                                <b>Rad qilingan</b>
+                                <span th:text="${chart.rejectedCount} + ' ta / ' + ${chart.rejectedPercent} + '%'">0 ta / 0%</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="teacher-monitoring-block">
+                <div class="teacher-monitoring-block-head">
+                    <div>
+                        <h2>Oxirgi yuborilgan ish rejalari</h2>
+                        <p>Har bir bo'limning eng oxirgi holati: ko'rib chiqilgan, rad etilgan, tasdiqlangan yoki hisobot yuborish kerakligi</p>
                     </div>
-                    <em th:text="${item.status}">Yuborilgan</em>
-                    <p th:text="${item.note}">Mudir ko'rib chiqishi kutilmoqda</p>
-                </a>
+                </div>
+
+                <div class="teacher-progress-grid">
+                    <a class="teacher-progress-card" th:each="item : ${sectionProgress}" th:href="@{/teacher/monitoring/{sectionKey}(sectionKey=${item.sectionKey})}">
+                        <div class="teacher-progress-card-head">
+                            <strong th:text="${item.sectionTitle}">O'quv ishlari</strong>
+                            <span th:text="${item.progress} + '%'">25%</span>
+                        </div>
+                        <div class="teacher-progress-bar">
+                            <span th:style="'width:' + ${item.progress} + '%'"></span>
+                        </div>
+                        <em th:text="${item.status}">Yuborilgan</em>
+                        <p th:text="${item.note}">Mudir ko'rib chiqishi kutilmoqda</p>
+                    </a>
+                </div>
             </div>
         </section>
     </section>

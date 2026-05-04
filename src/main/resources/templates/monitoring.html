@@ -176,15 +176,14 @@
                                                   minlength="2"
                                                   placeholder="Mudir fikrini yozing"></textarea>
                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                        <div class="monitoring-actions inline">
+                                            <button type="submit"
+                                                    class="monitoring-approve">Tasdiqlash</button>
+                                            <button type="submit"
+                                                    th:formaction="@{/monitoring/{id}/report/reject(id=${report.id})}"
+                                                    class="monitoring-reject">Rad etish</button>
+                                        </div>
                                     </form>
-                                    <div class="monitoring-actions inline">
-                                        <button type="submit"
-                                                th:attr="form=|reportDecision-${report.id}|,formaction=@{/monitoring/{id}/report/approve(id=${report.id})}"
-                                                class="monitoring-approve">Tasdiqlash</button>
-                                        <button type="submit"
-                                                th:attr="form=|reportDecision-${report.id}|,formaction=@{/monitoring/{id}/report/reject(id=${report.id})}"
-                                                class="monitoring-reject">Rad etish</button>
-                                    </div>
                                 </div>
                                 <span th:if="${(report.amaldaFiles == null || #strings.isEmpty(report.amaldaFiles)) && report.methodicalPenalty}" class="monitoring-note danger">
                                     <svg viewBox="0 0 24 24" aria-hidden="true">

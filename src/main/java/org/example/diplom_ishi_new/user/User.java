@@ -23,6 +23,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(unique = true)
+    private String email;
+
     private String visiblePassword;
 
     private String fullName;
@@ -68,6 +71,14 @@ public class User {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getVisiblePassword() {
